@@ -107,6 +107,35 @@ Tested against 3 representative tasks (create full deck, fix shadow column, fix 
 
 The skill's main contribution is the precise three-part table fix — without it, Claude correctly identifies the general problem but misses `background: none` and `width: fit-content`.
 
+## Comparison with neobeam
+
+`beamer.css` is inspired by [neobeam](https://github.com/mikael-ros/neobeam) but is a full rewrite. A 108-rule audit found the following deliberate differences:
+
+### Intentional simplifications
+
+| Area | neobeam | beamer.css |
+|---|---|---|
+| Colour system | ~30 computed HSL tokens | ~14 static hex tokens — easier to customise |
+| Footer | Overlapping pill/tab segments with negative margins | Flat three-section flex layout |
+| Slide alignment | Vertically centred content | Top-aligned — better for dense academic slides |
+| Definition block colours | Cycles 3 highlight colours | Always primary blue |
+| Semantic HTML | Styles `<mark>`, `<var>`, `<samp>`, `<q>` | Not included |
+| Image captions, logo, animations | Present | Not included |
+
+### Bug fixes relative to neobeam
+
+| Bug | neobeam | beamer.css |
+|---|---|---|
+| **Table corner notch** | Uses `border-spacing: 0`; cell-level `border-radius` works correctly | Fixed via `border-radius` + `overflow: hidden` on the `table` element |
+| **Definition block gap line** | `border-radius` on all child corners + flex sizing; can leak a seam if padding misaligns | `overflow: hidden` on parent + `border-radius: 0` on children — no seam possible |
+| **Inline code font** | `font-family: monospace` set explicitly | Same fix applied |
+
+### Enhancements over neobeam
+
+- `h2` underline border for visual section separation
+- Explicit column text-align and `vertical-align: middle` on table cells
+- Image max-width 80% (vs neobeam's 50%) — more practical for slide content
+
 ## Reference
 
 - [Marp](https://marp.app/) — Markdown Presentation Ecosystem
