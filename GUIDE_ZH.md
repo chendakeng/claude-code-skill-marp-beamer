@@ -92,7 +92,7 @@ table {
 
 **修复方案：**
 ```css
-blockquote:has(> h4) { border-radius: 0.45rem; overflow: hidden; }
+blockquote:has(> h4) { border-radius: var(--radius); overflow: hidden; }
 blockquote:has(> h4) h4 { border-radius: 0; }
 blockquote:has(> h4) p  { border-radius: 0; }
 ```
