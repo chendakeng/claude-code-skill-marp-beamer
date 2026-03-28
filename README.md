@@ -66,16 +66,76 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    footer: '**Author** **Title** **Venue · Date**'
    style: |
      :root {
+       /* ── Colour palette (change --primary to recolour everything) ── */
        --primary:        #3333b2;
        --primary-dark:   #25259e;
        --primary-darker: #1a1a80;
        --primary-light:  #9999dd;
        --bg-stripe:      #ededf8;
        --bg-stripe2:     #f5f5fc;
+
+       /* ── Layout & typography ── */
+       --font-size:  22px;
+       --pad-x:      2.5rem;
+       --header-h:   2.4rem;
+       --footer-h:   1.4rem;
+       --radius:     0.45rem;
+
+       /* ── Element widths ── */
+       --defblock-width:   88%;
+       --table-max-width:  92%;
+       --blockquote-width: 90%;
+       --img-max-width:    80%;
+       --title-h1-width:   85%;
      }
    ---
    ```
-   Swap any of the 6 tokens to recolour the entire theme — or share a reference palette and let Claude generate the block for you.
+   Every token is overridable per-deck — delete what you don't need to change, or keep them all as a self-documenting control panel.
+
+## Theme tokens
+
+All design values are CSS custom properties. Override any of them per-deck in the frontmatter `style:` block — no CSS file editing needed.
+
+### Colour palette
+
+| Token | Default | Controls |
+|-------|---------|---------|
+| `--primary` | `#3333b2` | Header bar, table headers, definition block title, h2 underline |
+| `--primary-dark` | `#25259e` | Footer centre segment, definition block body |
+| `--primary-darker` | `#1a1a80` | Footer left segment |
+| `--primary-light` | `#9999dd` | Minor accents |
+| `--bg-stripe` | `#ededf8` | Inline code background |
+| `--bg-stripe2` | `#f5f5fc` | Table even-row tint, standard blockquote background |
+
+Always set all 6 colour tokens together — partial overrides leave mismatched shades. See `references/beamer-css.md` for preset palettes (teal, burgundy, slate grey).
+
+### Layout & typography
+
+| Token | Default | Controls |
+|-------|---------|---------|
+| `--font-size` | `22px` | Base text size for all slide content |
+| `--pad-x` | `2.5rem` | Left/right content padding |
+| `--header-h` | `2.4rem` | Height of the top header bar |
+| `--footer-h` | `1.4rem` | Height of the bottom footer bar |
+| `--radius` | `0.45rem` | Border radius applied consistently everywhere |
+
+### Element widths
+
+| Token | Default | Controls |
+|-------|---------|---------|
+| `--defblock-width` | `88%` | Definition blocks (`> #### Title` syntax) |
+| `--table-max-width` | `92%` | Tables |
+| `--blockquote-width` | `90%` | Standard blockquotes (left-border style) |
+| `--img-max-width` | `80%` | Inline images |
+| `--title-h1-width` | `85%` | Title-slide h1 box |
+
+**Example — widen a definition block on one slide:**
+```yaml
+style: |
+  :root {
+    --defblock-width: 100%;
+  }
+```
 
 ## Fonts
 
