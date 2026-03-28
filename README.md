@@ -30,16 +30,23 @@ skill_marp_beamer/
 
 ## Installation
 
-```bash
-# Clone into your Claude skills directory
-git clone https://github.com/chendakeng/claude-code-skill-marp-beamer \
-    ~/.claude/skills/marp-beamer
+### Claude Code (humans)
+
+```
+/plugin marketplace add chendakeng/claude-code-skill-marp-beamer
+/plugin install marp-beamer@claude-code-skill-marp-beamer
 ```
 
-Or symlink from a local path:
+### Claude Code (AI agents)
+
+Ask your agent:
+
+> Install the marp-beamer skill from https://github.com/chendakeng/claude-code-skill-marp-beamer
+
+### Manual
 
 ```bash
-ln -sf /path/to/skill_marp_beamer ~/.claude/skills/marp-beamer
+git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/skills/marp-beamer
 ```
 
 ## Quick start

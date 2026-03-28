@@ -30,17 +30,23 @@ skill_marp_beamer/
 
 ## 安装方法
 
-**方式一：克隆到 Claude 技能目录**
+### Claude Code（人工操作）
 
-```bash
-git clone https://github.com/chendakeng/claude-code-skill-marp-beamer \
-    ~/.claude/skills/marp-beamer
+```
+/plugin marketplace add chendakeng/claude-code-skill-marp-beamer
+/plugin install marp-beamer@claude-code-skill-marp-beamer
 ```
 
-**方式二：从本地路径创建符号链接**
+### Claude Code（AI Agent 操作）
+
+告诉你的 Agent：
+
+> Install the marp-beamer skill from https://github.com/chendakeng/claude-code-skill-marp-beamer
+
+### 手动安装
 
 ```bash
-ln -sf /path/to/skill_marp_beamer ~/.claude/skills/marp-beamer
+git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/skills/marp-beamer
 ```
 
 ## 快速开始
