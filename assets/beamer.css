@@ -150,6 +150,8 @@ table {
   max-width: 92%;
   font-size: 0.82em;
   margin: 0.5em 0;
+  border-radius: var(--radius); /* round the table corners … */
+  overflow: hidden;             /* … and clip all children (incl. cell borders) to them */
 }
 
 table th {
@@ -161,8 +163,7 @@ table th {
   text-align: center;
 }
 
-table th:first-child { text-align: left; border-radius: var(--radius) 0 0 0; }
-table th:last-child  { border-radius: 0 var(--radius) 0 0; }
+table th:first-child { text-align: left; }
 
 table td {
   padding: 0.35em 0.9em;
@@ -175,10 +176,6 @@ table td:not(:first-child) { text-align: center; }
 /* Alternating row stripes */
 table tbody tr:nth-child(odd)  td { background: var(--white); }
 table tbody tr:nth-child(even) td { background: var(--bg-stripe2); }
-
-/* Bottom corners */
-table tbody tr:last-child td:first-child { border-radius: 0 0 0 var(--radius); }
-table tbody tr:last-child td:last-child  { border-radius: 0 0 var(--radius) 0; }
 
 /* ────────────────────────────────────────────────────────
    Blockquotes
