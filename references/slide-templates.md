@@ -11,6 +11,15 @@ theme: beamer
 paginate: true
 math: katex
 footer: '**[Author Name]** **[Presentation Title]** **[Venue · Date]**'
+style: |
+  :root {
+    --primary:        #3333b2;
+    --primary-dark:   #25259e;
+    --primary-darker: #1a1a80;
+    --primary-light:  #9999dd;
+    --bg-stripe:      #ededf8;
+    --bg-stripe2:     #f5f5fc;
+  }
 ---
 
 <!-- _class: title -->

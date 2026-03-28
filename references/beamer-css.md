@@ -272,14 +272,42 @@ section.title blockquote {
 
 ## Customising the colour scheme
 
-Change only `--primary` in `:root` and all derived colours update automatically:
+The theme uses 6 static hex tokens. All 6 must be set together — changing only
+`--primary` leaves the dark/stripe variants pointing at blue.
 
-| Want | Set `--primary` to |
-|------|-------------------|
-| Classic beamer blue | `#3333b2` (default) |
-| Dark teal | `#1a6b5c` |
-| Burgundy | `#7a1a2e` |
-| Slate grey | `#3d4f6b` |
+Override them via a `style:` block in the Marp frontmatter (no CSS file editing needed):
 
-Then manually adjust `--primary-dark` (slightly darker) and `--primary-darker`
-(darkest) to match.
+```yaml
+---
+marp: true
+theme: beamer
+style: |
+  :root {
+    --primary:        #3333b2;   /* header bar, table th, definition title, h2 underline */
+    --primary-dark:   #25259e;   /* footer centre, definition body */
+    --primary-darker: #1a1a80;   /* footer left segment */
+    --primary-light:  #9999dd;   /* minor accents */
+    --bg-stripe:      #ededf8;   /* inline code background */
+    --bg-stripe2:     #f5f5fc;   /* table even rows, blockquote background */
+  }
+---
+```
+
+Remove the `style:` block entirely to revert to default blue. Always include all
+6 tokens — partial overrides leave mismatched shades.
+
+**Why static hex, not computed HSL:** CSS relative color syntax (`hsl(from var(…)`)
+requires Chrome 119+. Static tokens work in all Chromium versions Marp might use,
+and allow exact matching to a reference palette rather than algorithmic approximation.
+
+**Preset palettes:**
+
+| Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe` | `--bg-stripe2` |
+|--------|-------------|------------------|--------------------|-------------------|---------------|----------------|
+| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#ededf8` | `#f5f5fc` |
+| Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#e0f2ee` | `#f0faf8` |
+| Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#f5e0e4` | `#faf0f2` |
+| Slate grey | `#3d4f6b` | `#2f3e56` | `#202c3f` | `#8d9db5` | `#e8ebf0` | `#f3f4f7` |
+
+To generate a custom palette from a reference image or brand colour, share the
+hex/image with Claude and ask for a 6-token block.
