@@ -77,6 +77,19 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    ```
    Swap any of the 6 tokens to recolour the entire theme — or share a reference palette and let Claude generate the block for you.
 
+## Fonts
+
+| Font | Purpose | Loading |
+|------|---------|---------|
+| Roboto | Latin / English | Google Fonts CDN |
+| Noto Sans TC | Traditional Chinese | Google Fonts CDN |
+| Noto Sans SC | Simplified Chinese | Google Fonts CDN |
+| PingFang TC / SC | CJK fallback | macOS system font |
+
+All three Google fonts are loaded via `@import` in `beamer.css` — nothing to configure per-deck. Noto CJK fonts are served as smart unicode-range subsets by Google's CDN (only the glyphs actually used are downloaded), so bundling them locally is not practical.
+
+**Offline behaviour:** Roboto and Noto Sans require internet. If unavailable, Latin falls back to system sans-serif and Chinese falls back to PingFang TC/SC (built into macOS — high quality and always available).
+
 ## The two CSS bugs this skill fixes
 
 ### Shadow column on tables
