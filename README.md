@@ -64,8 +64,18 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    theme: beamer
    paginate: true
    footer: '**Author** **Title** **Venue · Date**'
+   style: |
+     :root {
+       --primary:        #3333b2;
+       --primary-dark:   #25259e;
+       --primary-darker: #1a1a80;
+       --primary-light:  #9999dd;
+       --bg-stripe:      #ededf8;
+       --bg-stripe2:     #f5f5fc;
+     }
    ---
    ```
+   Swap any of the 6 tokens to recolour the entire theme — or share a reference palette and let Claude generate the block for you.
 
 ## The two CSS bugs this skill fixes
 
