@@ -14,6 +14,7 @@
    Design tokens
    ──────────────────────────────────────────────────────── */
 :root {
+  /* ── Colour palette ── */
   --primary:        #3333b2;
   --primary-dark:   #25259e;
   --primary-darker: #1a1a80;
@@ -23,12 +24,20 @@
   --text:           #111122;
   --white:          #ffffff;
 
+  /* ── Layout & typography ── */
   --header-h:  2.4rem;
   --footer-h:  1.4rem;
   --pad-x:     2.5rem;
   --radius:    0.45rem;
   --font:      'Roboto', 'Noto Sans TC', 'Noto Sans SC', sans-serif;
   --font-size: 22px;
+
+  /* ── Element widths (adjustable per-deck in frontmatter style:) ── */
+  --table-max-width:    92%;   /* max width of tables */
+  --blockquote-width:   90%;   /* max width of standard blockquotes */
+  --defblock-width:     88%;   /* max width of definition blocks (> #### Title) */
+  --img-max-width:      80%;   /* max width of inline images */
+  --title-h1-width:     85%;   /* max width of title-slide h1 box */
 }
 
 /* ────────────────────────────────────────────────────────
@@ -147,7 +156,7 @@ table {
   border-collapse: collapse;
   background: none;          /* ← crucial: no background on the table element */
   width: fit-content;        /* ← crucial: shrinks to column content, no ghost area */
-  max-width: 92%;
+  max-width: var(--table-max-width);
   font-size: 0.82em;
   margin: 0.5em 0;
   border-radius: var(--radius); /* round the table corners … */
@@ -188,7 +197,7 @@ blockquote {
   padding: 0.4em 0.8em;
   margin: 0.5em 0;
   border-radius: 0 var(--radius) var(--radius) 0;
-  max-width: 90%;
+  max-width: var(--blockquote-width);
   color: var(--text);
 }
 
@@ -205,7 +214,7 @@ blockquote:has(> h4) {
   border: none;
   background: none;
   padding: 0;
-  max-width: 62%;
+  max-width: var(--defblock-width);
   border-radius: var(--radius);
   overflow: hidden;        /* ← clips children cleanly, kills the line gap */
   display: flex;
@@ -252,7 +261,7 @@ section.title h1 {
   border-radius: var(--radius);
   font-size: 1.6em;
   border-bottom: none;
-  max-width: 85%;
+  max-width: var(--title-h1-width);
 }
 
 section.title h2 {
@@ -281,7 +290,7 @@ section.title blockquote {
    ──────────────────────────────────────────────────────── */
 img {
   display: block;
-  max-width: 80%;
+  max-width: var(--img-max-width);
   border-radius: var(--radius);
   margin: 0.5em 0;
   background: transparent;

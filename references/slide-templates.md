@@ -13,12 +13,27 @@ math: katex
 footer: '**[Author Name]** **[Presentation Title]** **[Venue · Date]**'
 style: |
   :root {
-    --primary:        #3333b2;
-    --primary-dark:   #25259e;
-    --primary-darker: #1a1a80;
-    --primary-light:  #9999dd;
-    --bg-stripe:      #ededf8;
-    --bg-stripe2:     #f5f5fc;
+    /* ── Colour palette (change --primary to recolour everything) ── */
+    --primary:        #3333b2;   /* header bar, table headers, definition title, h2 underline */
+    --primary-dark:   #25259e;   /* footer centre, definition body */
+    --primary-darker: #1a1a80;   /* footer left segment */
+    --primary-light:  #9999dd;   /* minor accents */
+    --bg-stripe:      #ededf8;   /* inline code background */
+    --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
+
+    /* ── Layout & typography ── */
+    --font-size:  22px;    /* base text size */
+    --pad-x:      2.5rem;  /* left/right content padding */
+    --header-h:   2.4rem;  /* top header bar height */
+    --footer-h:   1.4rem;  /* bottom footer bar height */
+    --radius:     0.45rem; /* border radius everywhere */
+
+    /* ── Element widths ── */
+    --defblock-width:   88%;  /* definition block: > #### Title */
+    --table-max-width:  92%;  /* tables */
+    --blockquote-width: 90%;  /* standard blockquotes */
+    --img-max-width:    80%;  /* inline images */
+    --title-h1-width:   85%;  /* title-slide h1 box */
   }
 ---
 

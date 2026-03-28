@@ -29,24 +29,39 @@ name here must match what you write in the slide frontmatter (`theme: beamer`).
 
 ## Design tokens
 
-All colours and spacing in `:root` — change `--primary` to recolour the whole theme.
-Classic beamer blue is `#3333b2`.
+All values are CSS custom properties in `:root`. Every token can be overridden
+per-deck in the frontmatter `style:` block — no CSS file editing needed.
 
 ```css
 :root {
-  --primary:        #3333b2;
-  --primary-dark:   #25259e;
-  --primary-darker: #1a1a80;
-  --bg-stripe2:     #f5f5fc;   /* even-row table tint */
+  /* ── Colour palette ── */
+  --primary:        #3333b2;   /* header bar, table th, definition title, h2 underline */
+  --primary-dark:   #25259e;   /* footer centre, definition body */
+  --primary-darker: #1a1a80;   /* footer left segment */
+  --primary-light:  #9999dd;   /* minor accents */
+  --bg-stripe:      #ededf8;   /* inline code background */
+  --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
   --text:           #111122;
   --white:          #ffffff;
+
+  /* ── Layout & typography ── */
   --header-h:  2.4rem;
   --footer-h:  1.4rem;
   --pad-x:     2.5rem;
   --radius:    0.45rem;
   --font-size: 22px;
+
+  /* ── Element widths ── */
+  --defblock-width:   88%;  /* definition block  > #### Title  (was hardcoded 62%) */
+  --table-max-width:  92%;  /* tables */
+  --blockquote-width: 90%;  /* standard blockquotes */
+  --img-max-width:    80%;  /* inline images */
+  --title-h1-width:   85%;  /* title-slide h1 box */
 }
 ```
+
+The full deck template (`references/slide-templates.md`) includes all tokens with
+inline comments — use it as a self-documenting control panel for each new deck.
 
 ---
 
