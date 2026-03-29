@@ -35,6 +35,14 @@ style: |
     --img-max-width:    80%;  /* inline images */
     --title-h1-width:   85%;  /* title-slide h1 box */
   }
+
+  /* ── Per-slide overrides (apply with <!-- _class: name -->) ──
+     Rules MUST be scoped with section.classname to avoid bleeding.
+     _style is NOT a valid Marp directive — use _class instead.
+     :root variable overrides do NOT work inside _class rules.       */
+  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
+  section.wide-table table { max-width: 100%; width: 100%; }
+  section.small-text { font-size: 18px; }
 ---
 
 <!-- _class: title -->

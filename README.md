@@ -129,13 +129,49 @@ Always set all 6 colour tokens together — partial overrides leave mismatched s
 | `--img-max-width` | `80%` | Inline images |
 | `--title-h1-width` | `85%` | Title-slide h1 box |
 
-**Example — widen a definition block on one slide:**
+**Deck-wide example — widen all definition blocks:**
 ```yaml
 style: |
   :root {
     --defblock-width: 100%;
   }
 ```
+
+## Per-slide overrides
+
+CSS variables set in `:root` apply deck-wide. To override a specific element on
+**one slide only**, use named CSS classes scoped to `section.classname` in the
+frontmatter `style:` block, then apply with `<!-- _class: name -->` on that slide.
+
+```yaml
+style: |
+  /* Per-slide tweaks — add as many as you need */
+  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
+  section.wide-table table { max-width: 100%; width: 100%; }
+  section.small-text { font-size: 18px; }
+```
+
+```markdown
+<!-- _class: wide-defblock -->
+
+> #### Key Finding
+> This definition block is full-width on this slide only.
+
+---
+
+<!-- _class: wide-table small-text -->
+
+## Dense Table Slide  ← table is full-width AND text is 18px, this slide only
+```
+
+**Rules:**
+- `section.classname` scoping is required — without it the rule bleeds to all slides
+- Multiple classes are space-separated: `<!-- _class: wide-table small-text -->`
+- `_class` replaces the slide's class entirely — combine with built-ins when needed:
+  `<!-- _class: title wide-defblock -->`
+- **`_style` is NOT a valid Marp directive** — it is silently ignored
+- **`:root` variable overrides inside `_class` rules do NOT work** — Marp does not
+  re-evaluate CSS custom properties at section scope; target elements directly instead
 
 ## Fonts
 
