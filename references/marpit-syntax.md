@@ -128,24 +128,22 @@ Multiple `![bg]` images stack horizontally; use `vertical` to stack vertically:
 ### Side-by-side images (horizontal row)
 
 The beamer theme sets `img { display: block; }`, so images placed next to each
-other in Markdown always stack **vertically**. To force a horizontal row, wrap
-them in a flex container:
+other in Markdown always stack **vertically**. To force a horizontal row, use
+`<img>` tags directly inside a flex container — do NOT use Markdown `![]()` syntax
+here, as Marp wraps each in a `<p>` block regardless of blank lines:
 
 ```markdown
-<div style="display: flex; gap: 1rem; justify-content: center;">
-
-![w:300](image1.png)
-![w:300](image2.png)
-
-</div>
+<div style="display: flex; gap: 1rem; justify-content: center;"><img src="image1.png" width="300"/><img src="image2.png" width="300"/></div>
 ```
 
 Key points:
-- The blank lines inside the `<div>` are required — Marp needs them to parse
-  the image syntax correctly.
-- Adjust `gap` for spacing between images; adjust `justify-content` (`flex-start`,
-  `center`, `space-between`) for alignment.
-- Each image can have its own independent `w:` size.
+- Use raw `<img>` tags, not Markdown `![]()` — Marp always wraps `![]()` in a
+  block element, breaking flex layout.
+- Keep everything on one line — line breaks inside the `<div>` can introduce
+  unwanted whitespace.
+- Adjust `gap` for spacing; `justify-content` (`flex-start`, `center`,
+  `space-between`) for alignment.
+- Each `<img>` can have its own independent `width`.
 
 ---
 
