@@ -75,7 +75,10 @@ blockquote:has(> h4) p  { border-radius: 0; }
 ## Quick-start checklist for a new deck
 
 1. Copy `assets/beamer.css` → `.vscode/beamer.css` in the project
-2. Create `.vscode/settings.json` → `{"markdown.marp.themes": [".vscode/beamer.css"]}`
+2. Create `.vscode/settings.json`:
+   ```json
+   { "markdown.marp.themes": [".vscode/beamer.css"], "markdown.marp.html": true }
+   ```
 3. Reload VS Code window (`Cmd+Shift+P → Reload Window`)
 4. Add frontmatter: `marp: true`, `theme: beamer`, `paginate: true`, `footer: '**Author** **Title** **Venue**'`
 5. First slide: `<!-- _class: title -->`

@@ -54,7 +54,10 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
 1. Copy `assets/beamer.css` → `.vscode/beamer.css` in your project
 2. Create `.vscode/settings.json`:
    ```json
-   { "markdown.marp.themes": [".vscode/beamer.css"] }
+   {
+     "markdown.marp.themes": [".vscode/beamer.css"],
+     "markdown.marp.html": true
+   }
    ```
 3. Reload VS Code (`Cmd+Shift+P → Reload Window`)
 4. Add frontmatter to your `.md` file:
@@ -70,7 +73,7 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
        --primary:        #3333b2;
        --primary-dark:   #25259e;
        --primary-darker: #1a1a80;
-       --primary-light:  #c49a22;   /* warm gold — h2 underline, blockquote border */
+       --primary-light:  #9999dd;   /* h2 underline, blockquote border */
        --bg-stripe:      #ededf8;
        --bg-stripe2:     #f5f5fc;
 
@@ -172,6 +175,37 @@ style: |
 - **`_style` is NOT a valid Marp directive** — it is silently ignored
 - **`:root` variable overrides inside `_class` rules do NOT work** — Marp does not
   re-evaluate CSS custom properties at section scope; target elements directly instead
+
+## Utility classes
+
+The theme ships two CSS utility classes for centering content. Unlike `![center]` (images only), these work on any HTML element.
+
+| Class | Usage | Effect |
+|:------|:------|:-------|
+| `.center` | `<div class="center">text</div>` | Centers text and inline content; also auto-centers any `<table>` inside |
+| `.caption` | `<div class="caption">Figure 1.</div>` | Centered, `0.78em`, grey — for figure labels |
+
+**Centering a markdown table** requires a slide-level class (markdown tables can't be wrapped in a `<div>`). Add to the frontmatter `style:` block and apply on the slide:
+
+```yaml
+style: |
+  section.center-table table { margin: 0.5em auto; }
+```
+```markdown
+<!-- _class: center-table -->
+
+## Results
+
+| A | B |
+|:--|:--|
+| 1 | 2 |
+```
+
+All HTML-based utilities require `"markdown.marp.html": true` in `.vscode/settings.json`. After changing this setting, reload VS Code (`Cmd+Shift+P → Reload Window`).
+
+> **Note on theme CSS vs frontmatter style:** Newly added utility classes in `beamer.css` require a VS Code window reload to take effect in the preview. If a class isn't applying, add it to the frontmatter `style:` block as a reliable fallback — it's always injected fresh.
+
+---
 
 ## Fonts
 

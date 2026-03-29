@@ -18,7 +18,7 @@ name here must match what you write in the slide frontmatter (`theme: beamer`).
  * @size 16:9 1280px 720px
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
 @import "default";   /* Marp's base reset — always import this */
 ```
 
@@ -38,11 +38,11 @@ per-deck in the frontmatter `style:` block — no CSS file editing needed.
   --primary:        #3333b2;   /* header bar, table th, definition block title, title h1 box, footer right */
   --primary-dark:   #25259e;   /* footer centre, definition block body, table th border */
   --primary-darker: #1a1a80;   /* footer left segment */
-  --primary-light:  #9999dd;   /* h2 underline, standard blockquote left border — accent colour */
+  --primary-light:  #9999dd;   /* light blue accent — h2 underline, standard blockquote left border */
   --bg-stripe:      #ededf8;   /* inline code background */
   --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
-  --text:           #111122;
-  --white:          #ffffff;
+  --text:           #111122;   /* body text colour */
+  --white:          #ffffff;   /* slide background, header/footer text */
 
   /* ── Layout & typography ── */
   --header-h:  2.4rem;
@@ -182,15 +182,12 @@ table th {
   font-weight: 600; padding: 0.35em 0.9em;
   border: 1px solid var(--primary-dark); text-align: center;
 }
-table th:first-child { text-align: left; border-radius: var(--radius) 0 0 0; }
-table th:last-child  { border-radius: 0 var(--radius) 0 0; }
+table th:first-child { text-align: left; }
 
-table td { padding: 0.35em 0.9em; border: 1px solid #d0d0e8; }
+table td { padding: 0.35em 0.9em; border: 1px solid #d0d0e8; vertical-align: middle; }
 table td:not(:first-child) { text-align: center; }
 table tbody tr:nth-child(odd)  td { background: var(--white); }
 table tbody tr:nth-child(even) td { background: var(--bg-stripe2); }
-table tbody tr:last-child td:first-child { border-radius: 0 0 0 var(--radius); }
-table tbody tr:last-child td:last-child  { border-radius: 0 0 var(--radius) 0; }
 ```
 
 ---
@@ -223,7 +220,7 @@ don't need their own rounding.
 ```css
 blockquote:has(> h4) {
   border: none; background: none; padding: 0;
-  max-width: 62%;
+  max-width: var(--defblock-width);
   border-radius: var(--radius);
   overflow: hidden;            /* clips children flush — no seam */
   display: flex; flex-direction: column;
@@ -250,11 +247,11 @@ blockquote:has(> h4) p {
 
 ```css
 blockquote {
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--primary-light);
   background: var(--bg-stripe2);
   padding: 0.4em 0.8em; margin: 0.5em 0;
   border-radius: 0 var(--radius) var(--radius) 0;
-  max-width: 90%; color: var(--text);
+  max-width: var(--blockquote-width); color: var(--text);
 }
 ```
 
@@ -357,7 +354,7 @@ style: |
     --primary:        #3333b2;   /* header bar, table th, definition title, h2 underline */
     --primary-dark:   #25259e;   /* footer centre, definition body */
     --primary-darker: #1a1a80;   /* footer left segment */
-    --primary-light:  #9999dd;   /* minor accents */
+    --primary-light:  #9999dd;   /* h2 underline, standard blockquote left border */
     --bg-stripe:      #ededf8;   /* inline code background */
     --bg-stripe2:     #f5f5fc;   /* table even rows, blockquote background */
   }
@@ -375,7 +372,7 @@ and allow exact matching to a reference palette rather than algorithmic approxim
 
 | Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe` | `--bg-stripe2` |
 |--------|-------------|------------------|--------------------|-------------------|---------------|----------------|
-| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#c49a22` | `#ededf8` | `#f5f5fc` |
+| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#ededf8` | `#f5f5fc` |
 | CUHK purple & gold | `#73216d` | `#5a1957` | `#3f1240` | `#dda300` | `#f4dfb0` | `#faf4e8` |
 | Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#e0f2ee` | `#f0faf8` |
 | Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#f5e0e4` | `#faf0f2` |

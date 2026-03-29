@@ -17,7 +17,7 @@ style: |
     --primary:        #3333b2;   /* header bar, table headers, definition title, h2 underline */
     --primary-dark:   #25259e;   /* footer centre, definition body */
     --primary-darker: #1a1a80;   /* footer left segment */
-    --primary-light:  #9999dd;   /* minor accents */
+    --primary-light:  #9999dd;   /* h2 underline, standard blockquote left border */
     --bg-stripe:      #ededf8;   /* inline code background */
     --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
 
@@ -42,7 +42,9 @@ style: |
      :root variable overrides do NOT work inside _class rules.       */
   section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
   section.wide-table table { max-width: 100%; width: 100%; }
+  section.center-table table { margin: 0.5em auto; }
   section.small-text { font-size: 18px; }
+  section.large-text { font-size: 26px; }
 ---
 
 <!-- _class: title -->
