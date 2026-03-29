@@ -42,6 +42,7 @@ style: |
      :root variable overrides do NOT work inside _class rules.       */
   section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
   section.wide-table table { max-width: 100%; width: 100%; }
+  section.small-table table { font-size: 0.7em; }
   section.center-table table { margin: 0.5em auto; }
   section.small-text { font-size: 18px; }
   section.large-text { font-size: 26px; }
@@ -299,13 +300,14 @@ Apply on the target slide:
 
 ```yaml
   section.wide-table table { max-width: 100%; width: 100%; }
+  section.small-table table { font-size: 0.7em; }   /* default 0.82em */
   section.small-text { font-size: 18px; }
 ```
 
 ```markdown
-<!-- _class: wide-table small-text -->
+<!-- _class: wide-table small-table -->
 
-## Dense Results Table   ← full-width table, 18px text, this slide only
+## Dense Results Table   ← full-width, smaller font, this slide only
 
 | Col A | Col B | Col C |
 |:------|:-----:|------:|
