@@ -229,6 +229,184 @@ affecting subsequent slides:
 
 ---
 
+## Customisation patterns
+
+A complete reference for every type of per-deck and per-slide tweak.
+All examples assume the full deck template frontmatter above.
+
+---
+
+### Colour palette — recolour the whole deck
+
+Change all 6 tokens together in `:root`. Partial overrides leave mismatched shades.
+
+```yaml
+style: |
+  :root {
+    --primary:        #73216d;   /* CUHK purple */
+    --primary-dark:   #5a1957;
+    --primary-darker: #3f1240;
+    --primary-light:  #dda300;   /* CUHK gold — h2 underline, blockquote border */
+    --bg-stripe:      #f4dfb0;   /* light gold — inline code bg */
+    --bg-stripe2:     #faf4e8;   /* warm cream — table even rows */
+  }
+```
+
+See the preset palette table in `beamer-css.md` for CUHK, teal, burgundy, and slate grey.
+
+---
+
+### Font size — deck-wide
+
+```yaml
+style: |
+  :root {
+    --font-size: 20px;   /* default 22px — reduce for dense slides */
+  }
+```
+
+---
+
+### Definition block width — deck-wide
+
+```yaml
+style: |
+  :root {
+    --defblock-width: 100%;   /* default 88% */
+  }
+```
+
+### Definition block width — one slide only
+
+Define the class once in the frontmatter `style:` block (already in the template):
+```yaml
+  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
+```
+
+Apply on the target slide:
+```markdown
+<!-- _class: wide-defblock -->
+
+> #### Key Finding
+> This box stretches full width on this slide only.
+```
+
+---
+
+### Table width and font — one slide only
+
+```yaml
+  section.wide-table table { max-width: 100%; width: 100%; }
+  section.small-text { font-size: 18px; }
+```
+
+```markdown
+<!-- _class: wide-table small-text -->
+
+## Dense Results Table   ← full-width table, 18px text, this slide only
+
+| Col A | Col B | Col C |
+|:------|:-----:|------:|
+| ...   | ...   | ...   |
+```
+
+Multiple classes are **space-separated**. Combine freely:
+```markdown
+<!-- _class: wide-defblock wide-table -->
+```
+
+---
+
+### Inline text: colour and size on specific words
+
+```markdown
+The effect <span style="color: #73216d; font-weight: 700;">decays within 2 years</span>
+and <span style="font-size: 0.85em; color: #888;">cannot be restored</span> by reinforcement.
+```
+
+---
+
+### Images: sizing
+
+```markdown
+![w:400](image.png)          <!-- 400px wide, height proportional -->
+![w:50%](image.png)          <!-- 50% of slide width -->
+![w:300 h:200](image.png)    <!-- fixed width and height -->
+![center w:500](image.png)   <!-- centred, 500px -->
+```
+
+---
+
+### Images: side-by-side (horizontal row)
+
+Use `<img>` tags inside a flex `<div>` — **not** Markdown `![]()` syntax,
+which always renders as a block. The beamer CSS includes `div img { display: inline }`
+so no extra per-image style is needed.
+
+```markdown
+<div style="display: flex; gap: 1rem; justify-content: center;"><img src="img1.png" width="300"/><img src="img2.png" width="300"/></div>
+```
+
+Adjust `gap` for spacing, `justify-content` for alignment (`flex-start`, `center`, `space-between`).
+Each `<img>` can have a different `width`.
+
+---
+
+### Images: background split layout
+
+Reserves a portion of the slide for an image; text fills the rest.
+
+```markdown
+<!-- header: 'Case Study' -->
+
+## Slide Title
+
+![bg left:40% contain](map.png)
+
+- Bullet point in the right 60%
+- Another point
+```
+
+Use `left` or `right`; the percentage controls image width. `contain` fits the image inside;
+`cover` (default) fills and crops.
+
+---
+
+### Per-slide font size
+
+```yaml
+  section.small-text { font-size: 18px; }
+  section.large-text { font-size: 26px; }
+```
+
+```markdown
+<!-- _class: small-text -->
+
+## Dense Slide — everything is 18px on this slide only
+```
+
+---
+
+### Combining per-slide class with built-in class
+
+`_class` replaces the slide's class — combine with built-ins using spaces:
+
+```markdown
+<!-- _class: title wide-defblock -->   ← title layout AND wide definition block
+```
+
+---
+
+### What does NOT work — common mistakes
+
+| Attempt | Result | Correct approach |
+|:--------|:-------|:-----------------|
+| `<!-- _style: 'h2 { color: red }' -->` | Silently ignored — `_style` is not a valid Marp directive | Define `section.myclass h2 { color: red }` in frontmatter, use `<!-- _class: myclass -->` |
+| `<!-- _class: myclass -->` with `:root { --defblock-width: 100% }` inside the class rule | No effect — Marp doesn't re-evaluate CSS vars at section scope | Target element directly: `section.myclass blockquote:has(> h4) { max-width: 100% }` |
+| `![w:300](a.png) ![w:300](b.png)` on same line | Still stacks vertically — `img { display: block }` in theme CSS | Use `<img>` tags inside a flex `<div>` (see side-by-side pattern above) |
+
+---
+
 ## Common footer patterns
 
 ```yaml
