@@ -35,10 +35,10 @@ per-deck in the frontmatter `style:` block — no CSS file editing needed.
 ```css
 :root {
   /* ── Colour palette ── */
-  --primary:        #3333b2;   /* header bar, table th, definition title, h2 underline */
-  --primary-dark:   #25259e;   /* footer centre, definition body */
+  --primary:        #3333b2;   /* header bar, table th, definition block title, title h1 box, footer right */
+  --primary-dark:   #25259e;   /* footer centre, definition block body, table th border */
   --primary-darker: #1a1a80;   /* footer left segment */
-  --primary-light:  #9999dd;   /* minor accents */
+  --primary-light:  #9999dd;   /* h2 underline, standard blockquote left border — accent colour */
   --bg-stripe:      #ededf8;   /* inline code background */
   --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
   --text:           #111122;

@@ -132,7 +132,7 @@ h1, h2, h3, h4, h5, h6 { margin: 0.25em 0; color: var(--text); }
 h2 {
   font-size: 1.25em;
   font-weight: 700;
-  border-bottom: 2.5px solid var(--primary);
+  border-bottom: 2.5px solid var(--primary-light);
   padding-bottom: 0.15em;
   margin-bottom: 0.5em;
 }
@@ -192,7 +192,7 @@ table tbody tr:nth-child(even) td { background: var(--bg-stripe2); }
 
 /* Standard quote */
 blockquote {
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--primary-light);
   background: var(--bg-stripe2);
   padding: 0.4em 0.8em;
   margin: 0.5em 0;

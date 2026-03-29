@@ -100,10 +100,10 @@ All design values are CSS custom properties. Override any of them per-deck in th
 
 | Token | Default | Controls |
 |-------|---------|---------|
-| `--primary` | `#3333b2` | Header bar, table headers, definition block title, h2 underline |
-| `--primary-dark` | `#25259e` | Footer centre segment, definition block body |
-| `--primary-darker` | `#1a1a80` | Footer left segment |
-| `--primary-light` | `#9999dd` | Minor accents |
+| `--primary` | `#3333b2` | Header bar, table headers, definition block title, title h1 box, footer right |
+| `--primary-dark` | `#25259e` | Footer centre segment, definition block body, table th border |
+| `--primary-darker` | `#1a1a80` | Footer left segment (darkest) |
+| `--primary-light` | `#9999dd` | **h2 underline · standard blockquote left border** — the accent colour |
 | `--bg-stripe` | `#ededf8` | Inline code background |
 | `--bg-stripe2` | `#f5f5fc` | Table even-row tint, standard blockquote background |
 
