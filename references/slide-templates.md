@@ -352,6 +352,21 @@ Each `<img>` can have a different `width`.
 
 ---
 
+### Images: caption
+
+Markdown has no alignment syntax for text (`![center]` only works for images). Use
+`<div class="caption">` — the `.caption` utility is built into the theme:
+
+```markdown
+![center w:500](figure.png)
+
+<div class="caption">Figure 1. Predicted margins by year under surveillance</div>
+```
+
+Requires `"markdown.marp.html": true` in `.vscode/settings.json`.
+
+---
+
 ### Images: background split layout
 
 Reserves a portion of the slide for an image; text fills the rest.

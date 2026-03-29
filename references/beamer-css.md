@@ -285,6 +285,38 @@ section.title blockquote {
 
 ---
 
+## Caption utility
+
+Markdown has no syntax for text alignment — `![center]` works only because images have an
+`alt` attribute that CSS can target. Plain paragraphs render as bare `<p>` elements with
+nothing to hook onto.
+
+The theme provides a `.caption` utility class for centered figure captions and similar
+short labels:
+
+```css
+.caption {
+  text-align: center;
+  font-size: 0.78em;
+  color: #666;
+  margin-top: 0.2em;
+}
+```
+
+Usage in slides (requires `markdown.marp.html: true` in `.vscode/settings.json`):
+
+```markdown
+![center w:500](figure.png)
+
+<div class="caption">Figure 1. Predicted margins of compliance by year under surveillance</div>
+```
+
+`<u>` is also usable as a compact shorthand when underline is not needed for its semantic
+meaning — add `u { display: block; text-align: center; text-decoration: none; }` to the
+frontmatter `style:` block if desired.
+
+---
+
 ## Customising the colour scheme
 
 The theme uses 6 static hex tokens. All 6 must be set together — changing only

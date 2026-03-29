@@ -303,6 +303,15 @@ img[alt*="center"] { margin: 0.5em auto; }
 img[alt*="right"]  { float: right; margin: 0.5em 0 0.5em 1em; }
 img[alt*="left"]   { float: left;  margin: 0.5em 1em 0.5em 0; }
 
+/* Caption utility — mirrors image centering for text:
+   Usage: <div class="caption">Figure caption</div> */
+.caption {
+  text-align: center;
+  font-size: 0.78em;
+  color: #666;
+  margin: 0.2em 0 0.5em;
+}
+
 /* ────────────────────────────────────────────────────────
    Inline code
    ──────────────────────────────────────────────────────── */

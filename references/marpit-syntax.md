@@ -131,6 +131,22 @@ Marp extends standard Markdown image syntax with keywords in the **alt text**.
 ![center Caption](image.png)   # centre
 ```
 
+### Figure caption (centered text below an image)
+
+Marp has no `[center]` equivalent for text — images work because alt text becomes an HTML
+attribute; plain paragraphs have nothing for CSS to target. Use `<div class="caption">`,
+which is a built-in utility in the beamer theme:
+
+```markdown
+![center w:500](figure.png)
+
+<div class="caption">Figure 1. Caption text here</div>
+```
+
+Requires `"markdown.marp.html": true` in `.vscode/settings.json`.
+
+---
+
 ### Background images (consume no inline space)
 
 ```markdown
