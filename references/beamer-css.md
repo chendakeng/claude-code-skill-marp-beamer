@@ -319,7 +319,7 @@ and allow exact matching to a reference palette rather than algorithmic approxim
 
 | Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe` | `--bg-stripe2` |
 |--------|-------------|------------------|--------------------|-------------------|---------------|----------------|
-| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#ededf8` | `#f5f5fc` |
+| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#c49a22` | `#ededf8` | `#f5f5fc` |
 | CUHK purple & gold | `#73216d` | `#5a1957` | `#3f1240` | `#dda300` | `#f4dfb0` | `#faf4e8` |
 | Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#e0f2ee` | `#f0faf8` |
 | Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#f5e0e4` | `#faf0f2` |

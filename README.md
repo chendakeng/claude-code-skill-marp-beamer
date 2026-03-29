@@ -70,7 +70,7 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
        --primary:        #3333b2;
        --primary-dark:   #25259e;
        --primary-darker: #1a1a80;
-       --primary-light:  #9999dd;
+       --primary-light:  #c49a22;   /* warm gold — h2 underline, blockquote border */
        --bg-stripe:      #ededf8;
        --bg-stripe2:     #f5f5fc;
 
@@ -103,7 +103,7 @@ All design values are CSS custom properties. Override any of them per-deck in th
 | `--primary` | `#3333b2` | Header bar, table headers, definition block title, title h1 box, footer right |
 | `--primary-dark` | `#25259e` | Footer centre segment, definition block body, table th border |
 | `--primary-darker` | `#1a1a80` | Footer left segment (darkest) |
-| `--primary-light` | `#9999dd` | **h2 underline · standard blockquote left border** — the accent colour |
+| `--primary-light` | `#c49a22` | **h2 underline · standard blockquote left border** — warm gold accent |
 | `--bg-stripe` | `#ededf8` | Inline code background |
 | `--bg-stripe2` | `#f5f5fc` | Table even-row tint, standard blockquote background |
 
