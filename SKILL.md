@@ -26,6 +26,44 @@ Read only the reference file(s) relevant to the current task. Do not load all fi
 
 ---
 
+## Customisation hierarchy — internalize this first
+
+Every visual tweak in a Marp beamer deck operates at one of three levels.
+Always pick the narrowest scope that satisfies the need.
+
+```
+Level 1 — Deck-wide (all slides)
+  → Override :root tokens in the frontmatter style: block
+  → Affects every slide simultaneously
+  → Examples: --font-size, --pad-x, --primary, --table-max-width
+
+Level 2 — Per-slide (one slide only)
+  → Define section.classname { ... } in frontmatter style:
+  → Apply with <!-- _class: classname --> on that slide
+  → Multiple classes are space-separated
+  → Examples: section.small-text, section.wide-table, section.center-table
+
+Level 3 — Inline (specific element, word, or line)
+  → Use <span style="..."> for words/phrases
+  → Use <div class="center">, <div class="caption"> for block-level
+  → Requires "markdown.marp.html": true in .vscode/settings.json
+```
+
+**Critical constraint:** `:root` variable overrides do NOT work inside `_class`
+rules — Marp does not re-evaluate CSS custom properties at section scope.
+Target elements directly instead:
+
+```yaml
+# WRONG — has no effect:
+section.my-slide { --font-size: 18px; }
+
+# CORRECT — targets element directly:
+section.my-slide { font-size: 18px; }
+section.my-slide table { font-size: 0.7em; }
+```
+
+---
+
 ## Critical rules — internalize before writing anything
 
 These are the two bugs that reliably appear when building beamer-style themes for

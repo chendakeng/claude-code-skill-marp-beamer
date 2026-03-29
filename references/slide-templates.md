@@ -46,6 +46,10 @@ style: |
   section.center-table table { margin: 0.5em auto; }
   section.small-text { font-size: 18px; }
   section.large-text { font-size: 26px; }
+  section.tight { line-height: 1.3; }
+  section.tight ul, section.tight ol { line-height: 1.5; }
+  section.vcenter { justify-content: center; }
+  section.wide-quote blockquote { max-width: 100%; }
 ---
 
 <!-- _class: title -->
@@ -424,6 +428,78 @@ Use `left` or `right`; the percentage controls image width. `contain` fits the i
 <!-- _class: small-text -->
 
 ## Dense Slide — everything is 18px on this slide only
+```
+
+---
+
+### Line spacing — deck-wide or per-slide
+
+Default `line-height` values in the theme:
+- Slide body: `1.5`
+- Lists (`ul`, `ol`): `1.8`
+- Definition block body: `1.55`
+
+**Deck-wide** (reduce for dense content throughout):
+```yaml
+style: |
+  section { line-height: 1.3; }
+  ul, ol  { line-height: 1.5; }
+```
+
+**Per-slide only:**
+```yaml
+style: |
+  section.tight { line-height: 1.3; }
+  section.tight ul, section.tight ol { line-height: 1.5; }
+```
+```markdown
+<!-- _class: tight -->
+
+## Dense Slide
+```
+
+---
+
+### Vertical centering on a non-title slide
+
+By default slides are top-aligned (`justify-content: flex-start`). To vertically
+centre content on a specific slide (e.g., a transition/quote slide):
+
+```yaml
+style: |
+  section.vcenter { justify-content: center; }
+```
+```markdown
+<!-- _class: vcenter -->
+
+## A Centred Transition Slide
+
+> *Key takeaway stated here.*
+```
+
+Combine with title layout if needed: `<!-- _class: title vcenter -->` (title gives
+horizontal centering; vcenter gives vertical).
+
+---
+
+### Blockquote width — per-slide
+
+`--blockquote-width` (default `90%`) sets deck-wide width. For a wider or full-width
+blockquote on one slide only:
+
+```yaml
+style: |
+  section.wide-quote blockquote { max-width: 100%; }
+```
+```markdown
+<!-- _class: wide-quote -->
+
+> Short pithy quote that benefits from more horizontal space.
+```
+
+For a narrower, centred pull-quote feel, reduce and pair with `.center`:
+```yaml
+  section.pull-quote blockquote { max-width: 60%; margin: 0 auto; }
 ```
 
 ---

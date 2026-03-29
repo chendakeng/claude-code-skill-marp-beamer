@@ -106,7 +106,7 @@ All design values are CSS custom properties. Override any of them per-deck in th
 | `--primary` | `#3333b2` | Header bar, table headers, definition block title, title h1 box, footer right |
 | `--primary-dark` | `#25259e` | Footer centre segment, definition block body, table th border |
 | `--primary-darker` | `#1a1a80` | Footer left segment (darkest) |
-| `--primary-light` | `#c49a22` | **h2 underline · standard blockquote left border** — warm gold accent |
+| `--primary-light` | `#9999dd` | **h2 underline · standard blockquote left border** — light blue accent |
 | `--bg-stripe` | `#ededf8` | Inline code background |
 | `--bg-stripe2` | `#f5f5fc` | Table even-row tint, standard blockquote background |
 
