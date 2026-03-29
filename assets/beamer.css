@@ -296,6 +296,9 @@ img {
   background: transparent;
 }
 
+/* Side-by-side layout: wrap <img> tags in a flex div and override display */
+div img { display: inline; margin: 0; }
+
 img[alt*="center"] { margin: 0.5em auto; }
 img[alt*="right"]  { float: right; margin: 0.5em 0 0.5em 1em; }
 img[alt*="left"]   { float: left;  margin: 0.5em 1em 0.5em 0; }

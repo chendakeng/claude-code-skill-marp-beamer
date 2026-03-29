@@ -139,8 +139,10 @@ here, as Marp wraps each in a `<p>` block regardless of blank lines:
 Key points:
 - Use raw `<img>` tags, not Markdown `![]()` — Marp always wraps `![]()` in a
   block element, breaking flex layout.
+- The beamer CSS includes `div img { display: inline; margin: 0; }` so `<img>`
+  tags inside any `<div>` automatically become flex children — no extra style needed.
 - Keep everything on one line — line breaks inside the `<div>` can introduce
-  unwanted whitespace.
+  unwanted whitespace nodes.
 - Adjust `gap` for spacing; `justify-content` (`flex-start`, `center`,
   `space-between`) for alignment.
 - Each `<img>` can have its own independent `width`.
