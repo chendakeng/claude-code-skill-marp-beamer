@@ -67,25 +67,30 @@ Spot equivalents: prefix any of the above with `_`:
 <!-- _backgroundColor: aqua -->
 ```
 
-### Per-slide element styling with `_style`
+### Per-slide element styling with `_class`
 
-Use `<!-- _style: '...' -->` to inject CSS for one slide only. Target elements
-directly — **do not use `:root { --variable: value }` inside `_style`**, as Marp
-does not re-evaluate CSS custom properties at the section scope, so variable
-overrides have no effect.
+**`_style` is NOT a valid Marp directive** — it is silently ignored. Only specific
+directives support the `_` spot prefix (`_class`, `_header`, `_footer`,
+`_backgroundColor`, etc.). `style` is frontmatter-only and applies globally.
+
+To style elements on one slide only, define a named class in the frontmatter
+`style:` block and apply it with `<!-- _class: name -->`:
+
+```yaml
+style: |
+  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
+  section.dense table { font-size: 0.7em; }
+```
 
 ```markdown
-<!-- _style: 'blockquote:has(> h4) { max-width: 100%; }' -->
+<!-- _class: wide-defblock -->
 
 > #### Wide Finding Block
 > This definition block stretches full width on this slide only.
 ```
 
-```markdown
-<!-- _style: 'table { font-size: 0.7em; }' -->
-
-## Dense Table Slide
-```
+The `section.classname` prefix is required — it scopes the rule to slides with
+that class and prevents it from affecting other slides.
 
 ### Pagination values
 
