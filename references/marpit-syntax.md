@@ -67,6 +67,26 @@ Spot equivalents: prefix any of the above with `_`:
 <!-- _backgroundColor: aqua -->
 ```
 
+### Per-slide element styling with `_style`
+
+Use `<!-- _style: '...' -->` to inject CSS for one slide only. Target elements
+directly — **do not use `:root { --variable: value }` inside `_style`**, as Marp
+does not re-evaluate CSS custom properties at the section scope, so variable
+overrides have no effect.
+
+```markdown
+<!-- _style: 'blockquote:has(> h4) { max-width: 100%; }' -->
+
+> #### Wide Finding Block
+> This definition block stretches full width on this slide only.
+```
+
+```markdown
+<!-- _style: 'table { font-size: 0.7em; }' -->
+
+## Dense Table Slide
+```
+
 ### Pagination values
 
 | Value | Shows number | Counter increments |
