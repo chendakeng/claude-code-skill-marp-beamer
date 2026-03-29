@@ -285,35 +285,59 @@ section.title blockquote {
 
 ---
 
-## Caption utility
+## Centering utilities
 
-Markdown has no syntax for text alignment — `![center]` works only because images have an
-`alt` attribute that CSS can target. Plain paragraphs render as bare `<p>` elements with
-nothing to hook onto.
+Markdown has no text-alignment syntax. `![center]` works only because images have an `alt`
+attribute CSS can target. Plain paragraphs render as bare `<p>` with nothing to hook onto.
 
-The theme provides a `.caption` utility class for centered figure captions and similar
-short labels:
+The theme provides two utility classes:
+
+| Class | Purpose |
+|:------|:--------|
+| `.center` | Centers text, inline content, **and** tables |
+| `.caption` | Figure caption — centered, `0.78em`, grey |
 
 ```css
-.caption {
-  text-align: center;
-  font-size: 0.78em;
-  color: #666;
-  margin-top: 0.2em;
-}
+.center { text-align: center; }
+.center table { margin-left: auto; margin-right: auto; }
+
+.caption { text-align: center; font-size: 0.78em; color: #666; margin: 0.2em 0 0.5em; }
 ```
 
-Usage in slides (requires `markdown.marp.html: true` in `.vscode/settings.json`):
+**Why `.center table` is needed:** `text-align: center` on a wrapper div centers inline
+content but does NOT move a block-level `<table>`. Tables need `margin: auto` on the
+element itself. `.center table` handles this automatically.
 
+**Centering text or inline content:**
+```markdown
+<div class="center">Any text, emphasis, or inline elements here</div>
+```
+
+**Centering a figure caption:**
 ```markdown
 ![center w:500](figure.png)
 
-<div class="caption">Figure 1. Predicted margins of compliance by year under surveillance</div>
+<div class="caption">Figure 1. Predicted margins by year under surveillance</div>
 ```
 
-`<u>` is also usable as a compact shorthand when underline is not needed for its semantic
-meaning — add `u { display: block; text-align: center; text-decoration: none; }` to the
-frontmatter `style:` block if desired.
+**Centering a table — markdown tables cannot be wrapped in a `<div>`.** Use a slide-level
+class instead. Add to the frontmatter `style:` block:
+```yaml
+style: |
+  section.center-table table { margin: 0.5em auto; }
+```
+Then on the slide:
+```markdown
+<!-- _class: center-table -->
+
+## Slide Title
+
+| Col A | Col B |
+|:------|:------|
+| data  | data  |
+```
+
+All require `"markdown.marp.html": true` in `.vscode/settings.json`.
 
 ---
 

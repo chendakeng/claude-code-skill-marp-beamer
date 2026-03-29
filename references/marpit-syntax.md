@@ -131,19 +131,28 @@ Marp extends standard Markdown image syntax with keywords in the **alt text**.
 ![center Caption](image.png)   # centre
 ```
 
-### Figure caption (centered text below an image)
+### Centering text, captions, and tables
 
-Marp has no `[center]` equivalent for text — images work because alt text becomes an HTML
-attribute; plain paragraphs have nothing for CSS to target. Use `<div class="caption">`,
-which is a built-in utility in the beamer theme:
+Marp has no `[center]` equivalent for text — `![center]` works only because images have
+an `alt` attribute CSS can target. The beamer theme provides two utility classes:
 
+**`.center`** — centers text, inline content, and tables:
+```markdown
+<div class="center">Any centered text here</div>
+```
+
+**`.caption`** — figure caption style (centered, small, grey):
 ```markdown
 ![center w:500](figure.png)
 
 <div class="caption">Figure 1. Caption text here</div>
 ```
 
-Requires `"markdown.marp.html": true` in `.vscode/settings.json`.
+**Centering a markdown table** — tables cannot be wrapped in a `<div>`. Use a slide-level
+class. Add `section.center-table table { margin: 0.5em auto; }` to the frontmatter
+`style:` block, then apply `<!-- _class: center-table -->` on the slide.
+
+All require `"markdown.marp.html": true` in `.vscode/settings.json`.
 
 ---
 

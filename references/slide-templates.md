@@ -352,18 +352,40 @@ Each `<img>` can have a different `width`.
 
 ---
 
-### Images: caption
+### Centering: text, captions, and tables
 
-Markdown has no alignment syntax for text (`![center]` only works for images). Use
-`<div class="caption">` — the `.caption` utility is built into the theme:
+The theme provides `.center` (general) and `.caption` (figure label) utilities.
 
+**Center any text or inline content:**
+```markdown
+<div class="center">Centered text, bold, or any inline content</div>
+```
+
+**Figure caption (centered, small, grey):**
 ```markdown
 ![center w:500](figure.png)
 
 <div class="caption">Figure 1. Predicted margins by year under surveillance</div>
 ```
 
-Requires `"markdown.marp.html": true` in `.vscode/settings.json`.
+**Center a table** — markdown tables cannot be wrapped in a `<div>`. Use a slide-level
+class. Add this to the frontmatter `style:` block:
+```yaml
+style: |
+  section.center-table table { margin: 0.5em auto; }
+```
+Then on the slide:
+```markdown
+<!-- _class: center-table -->
+
+## Results
+
+| A | B | C |
+|:--|:--|:--|
+| 1 | 2 | 3 |
+```
+
+All require `"markdown.marp.html": true` in `.vscode/settings.json`.
 
 ---
 

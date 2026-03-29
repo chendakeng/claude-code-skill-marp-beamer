@@ -303,8 +303,34 @@ img[alt*="center"] { margin: 0.5em auto; }
 img[alt*="right"]  { float: right; margin: 0.5em 0 0.5em 1em; }
 img[alt*="left"]   { float: left;  margin: 0.5em 1em 0.5em 0; }
 
-/* Caption utility — mirrors image centering for text:
-   Usage: <div class="caption">Figure caption</div> */
+/* ── Centering utilities ─────────────────────────────────
+   .center  — centers text, inline elements, and tables
+   .caption — styled figure caption (centered, small, grey)
+
+   For text/inline: text-align: center on the wrapper suffices.
+   For tables: text-align alone does nothing — the block needs
+   margin: auto. .center table handles this automatically.
+
+   Usage:
+     <div class="center">Any text or inline content</div>
+     <div class="center">Markdown table rendered here — NOTE: markdown
+       tables cannot be wrapped in a div; use <!-- _class: center-table -->
+       on the slide instead (see below).
+     </div>
+
+   For centering a table on one slide:
+     <!-- _class: center-table -->
+   Add to frontmatter style: section.center-table table { margin: 0.5em auto; }
+   ──────────────────────────────────────────────────────── */
+.center {
+  text-align: center;
+}
+.center table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Figure caption: centered, small, muted */
 .caption {
   text-align: center;
   font-size: 0.78em;
