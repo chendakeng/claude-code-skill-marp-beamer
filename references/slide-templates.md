@@ -538,3 +538,115 @@ footer: '**Jane Smith** **  ** **2025**'
 ```
 
 Each `**…**` segment becomes one footer section (left / centre / right).
+
+---
+
+## Appendix navigation — clickable TOC with back buttons
+
+For presentations with appendix slides (Q&A backup material), use Marp's native
+numeric slide IDs (`#N`) for all inter-slide links. This is the only reliable
+mechanism — custom `_id` directives are silently ignored by Marp.
+
+### How it works
+
+- Marp assigns every slide a numeric anchor `#1`, `#2`, … in the exported HTML.
+- Links like `[text](#N)` in the HTML export are clickable and jump correctly.
+- Count slide numbers manually (every `---` separator starts a new slide).
+- Title/thank-you slides with `<!-- _paginate: skip -->` still consume a number
+  in the HTML — skip does not affect anchor numbering, only the visible counter.
+
+### Step 1 — TOC slide (insert after your closing/thank-you slide)
+
+```markdown
+---
+<!-- _paginate: skip -->
+<!-- _header: 'Appendix: Contents' -->
+
+## Appendix: Contents
+
+**Measurement:** [IV — Treatment Variable](#15) · [DV — Outcome Variable](#19)
+
+**Results:** [CGSS2006](#22) · [CGSS2010](#24) · [Pooled Analysis](#26)
+
+**Robustness:** [PSM (I)](#33) · [Reverse Causality (II)](#35) · [City Tracing (III)](#36) · [Spatial Lag (IV)](#38)
+
+**Teaching:** [UG Course](#44) · [PG Course](#45) · [AI Policy](#47)
+```
+
+Group entries by category using `**Category:**` bold labels. Use `·` as separator.
+
+### Step 2 — Back button on the last slide of each section
+
+Place this HTML on the **last** slide of each appendix section (not the first):
+
+```html
+<a href="#14" style="position:absolute; bottom:1.8rem; left:1.5rem; font-size:0.85em; color:var(--primary); text-decoration:none; background:rgba(244,223,176,0.9); padding:0.15em 0.45em; border-radius:0.25em;">↩</a>
+```
+
+Replace `#14` with the actual slide number of your TOC slide. The button sits in
+the bottom-left corner using `position:absolute`, safely outside the content flow.
+
+Use `↩` (U+21A9) as the icon — clean, universally supported, no emoji needed.
+
+### Step 3 — Appendix slides use `_paginate: skip`
+
+All appendix slides should suppress page numbers:
+
+```markdown
+---
+<!-- _paginate: skip -->
+<!-- header: 'Appendix: Section Name' -->
+
+## Slide Title
+```
+
+### Worked example — two-section appendix
+
+```markdown
+<!-- TOC slide — say it's slide 14 -->
+---
+<!-- _paginate: skip -->
+<!-- _header: 'Appendix: Contents' -->
+
+## Appendix: Contents
+
+**Section A:** [Measurement](#15) · [Results](#17)
+**Section B:** [Robustness Check](#19)
+
+<!-- Last slide of Section A — slide 16 -->
+---
+<!-- _paginate: skip -->
+<!-- header: 'Appendix: Section A' -->
+
+## Results Figure
+
+![center w:700](figures/result.png)
+
+<a href="#14" style="position:absolute; bottom:1.8rem; left:1.5rem; font-size:0.85em; color:var(--primary); text-decoration:none; background:rgba(244,223,176,0.9); padding:0.15em 0.45em; border-radius:0.25em;">↩</a>
+
+<!-- Last slide of Section B — slide 20 -->
+---
+<!-- _paginate: skip -->
+<!-- header: 'Appendix: Section B' -->
+
+## Robustness Table
+
+![center w:700](figures/robustness.png)
+
+<a href="#14" style="position:absolute; bottom:1.8rem; left:1.5rem; font-size:0.85em; color:var(--primary); text-decoration:none; background:rgba(244,223,176,0.9); padding:0.15em 0.45em; border-radius:0.25em;">↩</a>
+```
+
+### Key rules
+
+| Rule | Reason |
+|:-----|:-------|
+| Use `#N` numeric anchors only | `<!-- _id: name -->` is not a valid Marp directive and is silently ignored |
+| Put back button on the **last** slide of each section | First-slide placement is confusing — you haven't seen the content yet |
+| Keep TOC slide number stable | Adding/removing slides before the appendix shifts all numbers — recount after any structural change |
+| `_paginate: skip` does not shift numbering | The slide still gets an HTML anchor; it just hides the visible page counter |
+| Export as HTML for navigation | PDF does not support inter-slide hyperlinks; HTML export (`.html`) does |
+
+### Presenter mode in HTML export
+
+Export → HTML from VS Code Marp extension, open in browser, press **`P`** for
+presenter view. Navigation links work in both presenter and normal view.

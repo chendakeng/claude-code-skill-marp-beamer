@@ -23,6 +23,7 @@ Read only the reference file(s) relevant to the current task. Do not load all fi
 | Generating a new deck or slide from a template | `references/slide-templates.md` |
 | Setting up VS Code + registering the theme | `references/marpit-syntax.md` (§ VS Code setup) |
 | Copying the ready-to-use CSS file | `assets/beamer.css` |
+| Appendix TOC with clickable links + back buttons | `references/slide-templates.md` (§ Appendix navigation) |
 
 ---
 
