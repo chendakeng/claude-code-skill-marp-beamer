@@ -258,3 +258,56 @@ enables HTML:
 After editing `settings.json` or the CSS file, run **Cmd+Shift+P → Reload Window**
 to force Marp to pick up the changes. Theme name in frontmatter must exactly match
 the `@theme` name in the CSS comment header.
+
+---
+
+## Speaker notes
+
+Speaker notes are written as HTML comments at the end of each slide's content
+block. They are invisible on the slide but appear in presenter mode.
+
+```markdown
+## Slide Title
+
+Content visible on the slide.
+
+<!--
+This is a speaker note.
+Write the full speech text here — as many lines as needed.
+It does not appear on the slide.
+-->
+```
+
+### Presenter mode
+
+Export as HTML (VS Code Marp extension → Export → `.html`), open in a browser,
+press **`P`**. You will see:
+
+- Current slide (left) · Next slide preview (right)
+- Speaker notes panel (below)
+- Elapsed timer
+
+The HTML file is self-contained — no server needed.
+
+### Practical pattern for talk scripts
+
+Write the full spoken script as speaker notes, one slide at a time. For optional
+content (e.g. self-introduction that depends on context), wrap it in backticks
+inside the note so it reads as conditional:
+
+```markdown
+## Title
+
+<!--
+`Optional: Good morning, my name is…`
+
+Today I want to show you how my research and teaching come together.
+-->
+```
+
+### What does NOT work
+
+| Attempt | Result |
+|:--------|:-------|
+| `<!-- note: text -->` | Not a Marp directive — ignored |
+| Notes in PDF export | PDF has no presenter mode — notes are lost; use HTML |

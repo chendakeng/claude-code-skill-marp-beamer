@@ -1,5 +1,5 @@
 ---
-name: marp-beamer
+name: skill_marp_beamer
 description: >
   Creates and edits Marp presentations with a beamer-style theme (dark-blue
   header bar, three-section footer, definition blocks, styled tables). Use this
@@ -24,6 +24,7 @@ Read only the reference file(s) relevant to the current task. Do not load all fi
 | Setting up VS Code + registering the theme | `references/marpit-syntax.md` (§ VS Code setup) |
 | Copying the ready-to-use CSS file | `assets/beamer.css` |
 | Appendix TOC with clickable links + back buttons | `references/slide-templates.md` (§ Appendix navigation) |
+| Speaker notes + presenter mode | `references/marpit-syntax.md` (§ Speaker notes) |
 
 ---
 
