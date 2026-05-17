@@ -110,6 +110,27 @@ blockquote:has(> h4) h4 { border-radius: 0; }
 blockquote:has(> h4) p  { border-radius: 0; }
 ```
 
+### 3 — Large gap between bold label paragraphs and bullet lists
+
+**Symptom:** Slides that mix a bold label paragraph (`**Label**`) immediately above a
+bullet list show a conspicuously large blank between the two — roughly 0.75 em even
+though no extra blank line exists in the Markdown source.
+
+**Cause:** CSS specificity. The beamer theme resets all margins with `* { margin: 0; padding: 0 }`,
+but the universal selector `*` has specificity 0-0-0. Marp's built-in base stylesheet
+contains `p { margin: 0.5em 0; }` at specificity 0-0-1 — it wins every time, so `<p>`
+elements retain a 0.5 em top/bottom margin regardless of the reset.
+The visible gap is `p margin-bottom (0.5 em) + ul margin-top (0.25 em) = 0.75 em`.
+
+**Fix — add an explicit `p` rule after the heading block:**
+```css
+p { margin: 0.15em 0; }
+```
+
+This overrides Marp's built-in at equal or greater specificity (loaded later in the
+cascade). The resulting gap shrinks to ~0.4 em, which reads naturally without being
+so tight it collapses distinct sections.
+
 ---
 
 ## Quick-start checklist for a new deck

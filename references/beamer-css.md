@@ -243,6 +243,35 @@ blockquote:has(> h4) p {
 
 ---
 
+## Paragraph margin — specificity bug and fix
+
+### What goes wrong
+
+Slides that use a bold label paragraph (`**Label**`) immediately above a bullet list
+show a large blank gap (~0.75 em) between them, even when no extra blank line exists
+in the Markdown source.
+
+### Root cause
+
+The beamer theme resets all margins with `* { margin: 0; padding: 0 }`, but the
+universal selector `*` has CSS specificity 0-0-0. Marp's built-in base stylesheet
+contains `p { margin: 0.5em 0; }` at specificity 0-0-1 — it wins, so `<p>` elements
+always retain a 0.5 em top/bottom margin. With `ul { margin: 0.25em 0 }` on top, the
+total visible gap between a bold label and a bullet list is 0.75 em.
+
+### The fix
+
+Add an explicit `p` rule in the theme CSS, after the heading block:
+
+```css
+p { margin: 0.15em 0; }
+```
+
+The resulting label-to-list gap is ~0.4 em (0.15 + 0.25), which reads naturally
+without collapsing distinct sections into each other.
+
+---
+
 ## Standard blockquote (no h4)
 
 ```css
