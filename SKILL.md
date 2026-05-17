@@ -66,72 +66,64 @@ section.my-slide table { font-size: 0.7em; }
 
 ---
 
-## Critical rules — internalize before writing anything
+## CSS design decisions — understand before editing
 
-These three pitfalls reliably appear when building beamer-style Marp themes. All
-three are **already fixed in `assets/beamer.css`**. Document them here so future
-edits do not accidentally revert the fixes. Do NOT re-apply them — the rules are
-already present.
+Three areas of the beamer CSS require non-obvious rules. Each rule is intentional:
+changing or removing it breaks the visual output in a way that is not immediately
+obvious from the CSS alone.
 
-### 1 — Table shadow column
+### 1 — Tables: background only on cells, never on the table element
 
-**Symptom:** A phantom column (same background as table, no text) appears to the
-right of the last real column, with a dark border on the far right.
+Tables need three properties together so the table element occupies exactly the
+width of its columns and carries no background of its own:
 
-**Cause:** Putting `background-color` on the `<table>` element itself. When the
-table element is wider than its cell columns, the table's own background bleeds
-into the empty space.
-
-**Already fixed — do not remove these three properties from the `table` block:**
 ```css
 table {
   border-collapse: collapse; /* cells share borders, no gaps */
-  background: none;          /* no background on table element — only on th/td */
+  background: none;          /* background on th/td only — never on table */
   width: fit-content;        /* table is exactly as wide as its columns */
 }
 ```
 
-Never put `background-color` directly on `table`. Put it only on `th`, `td`, and `tr`.
+If `background` is placed on `table` instead of the cells, or if `width` is set to
+`100%`, a phantom column with a dark border appears to the right of the last real
+column.
 
-### 2 — Definition-block gap line
+### 2 — Definition blocks: `overflow: hidden` on the parent, `border-radius: 0` on children
 
-**Symptom:** A thin visible seam between the coloured title bar (h4) and the body
-of a `blockquote:has(> h4)` definition block.
+The `blockquote:has(> h4)` definition block has rounded corners. The correct pattern
+is to round only the parent container and let `overflow: hidden` clip the children
+flush to those corners:
 
-**Cause:** Applying `border-radius` to all four corners of both the `h4` and `p`
-children. Where their adjacent edges meet, the inward-curving corners reveal the
-parent's background, creating the seam.
-
-**Already fixed — do not remove `overflow: hidden` or restore non-zero border-radius on children:**
 ```css
 blockquote:has(> h4) {
   border-radius: var(--radius);
-  overflow: hidden;   /* clips children flush — no seam possible */
+  overflow: hidden;   /* clips children flush — clean corner at the shared edge */
 }
 blockquote:has(> h4) h4 { border-radius: 0; }
 blockquote:has(> h4) p  { border-radius: 0; }
 ```
 
-### 3 — Large gap between bold label paragraphs and bullet lists
+If `border-radius` is applied to the child elements instead, the inward-curving
+corners at the shared h4/p edge expose the parent background as a visible seam.
 
-**Symptom:** Slides that mix a bold label paragraph (`**Label**`) immediately above a
-bullet list show a conspicuously large blank between the two — roughly 0.75 em even
-though no extra blank line exists in the Markdown source.
+### 3 — Paragraph margins: use an explicit `p` rule, not the `*` reset
 
-**Cause:** CSS specificity. The beamer theme resets all margins with `* { margin: 0; padding: 0 }`,
-but the universal selector `*` has specificity 0-0-0. Marp's built-in base stylesheet
-contains `p { margin: 0.5em 0; }` at specificity 0-0-1 — it wins every time, so `<p>`
-elements retain a 0.5 em top/bottom margin regardless of the reset.
-The visible gap is `p margin-bottom (0.5 em) + ul margin-top (0.25 em) = 0.75 em`.
+The CSS includes `* { margin: 0; padding: 0 }`, but the universal selector `*` has
+specificity 0-0-0. Marp's built-in stylesheet ships with `p { margin: 0.5em 0 }` at
+specificity 0-0-1, so it always wins over `*`. Without an explicit `p` rule in the
+theme, paragraphs carry a 0.5 em top/bottom margin and a bold-label paragraph above
+a bullet list produces a ~0.75 em gap.
 
-**Already fixed — do not remove the explicit `p` rule that sits after the heading block:**
+The correct pattern is an explicit `p` rule at element specificity:
+
 ```css
 p { margin: 0.15em 0; }
 ```
 
-This overrides Marp's built-in at equal specificity (loaded later in the cascade).
-Removing it restores the 0.75 em gap. Do not replace it with the `*` reset — that
-selector loses to Marp's element-level rule.
+This sits after the heading block in the CSS and overrides Marp's built-in at equal
+specificity via cascade order. The result is ~0.4 em spacing between a label and the
+list below it — tight enough to look grouped, loose enough to breathe.
 
 ---
 
