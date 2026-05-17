@@ -68,8 +68,10 @@ section.my-slide table { font-size: 0.7em; }
 
 ## Critical rules — internalize before writing anything
 
-These are the two bugs that reliably appear when building beamer-style themes for
-Marp. They look subtle on screen but have simple root causes.
+These three pitfalls reliably appear when building beamer-style Marp themes. All
+three are **already fixed in `assets/beamer.css`**. Document them here so future
+edits do not accidentally revert the fixes. Do NOT re-apply them — the rules are
+already present.
 
 ### 1 — Table shadow column
 
@@ -80,7 +82,7 @@ right of the last real column, with a dark border on the far right.
 table element is wider than its cell columns, the table's own background bleeds
 into the empty space.
 
-**Fix — three properties, always together:**
+**Already fixed — do not remove these three properties from the `table` block:**
 ```css
 table {
   border-collapse: collapse; /* cells share borders, no gaps */
@@ -100,7 +102,7 @@ of a `blockquote:has(> h4)` definition block.
 children. Where their adjacent edges meet, the inward-curving corners reveal the
 parent's background, creating the seam.
 
-**Fix — `overflow: hidden` on the parent, `border-radius: 0` on children:**
+**Already fixed — do not remove `overflow: hidden` or restore non-zero border-radius on children:**
 ```css
 blockquote:has(> h4) {
   border-radius: var(--radius);
@@ -122,14 +124,14 @@ contains `p { margin: 0.5em 0; }` at specificity 0-0-1 — it wins every time, s
 elements retain a 0.5 em top/bottom margin regardless of the reset.
 The visible gap is `p margin-bottom (0.5 em) + ul margin-top (0.25 em) = 0.75 em`.
 
-**Fix — add an explicit `p` rule after the heading block:**
+**Already fixed — do not remove the explicit `p` rule that sits after the heading block:**
 ```css
 p { margin: 0.15em 0; }
 ```
 
-This overrides Marp's built-in at equal or greater specificity (loaded later in the
-cascade). The resulting gap shrinks to ~0.4 em, which reads naturally without being
-so tight it collapses distinct sections.
+This overrides Marp's built-in at equal specificity (loaded later in the cascade).
+Removing it restores the 0.75 em gap. Do not replace it with the `*` reset — that
+selector loses to Marp's element-level rule.
 
 ---
 
