@@ -66,7 +66,7 @@ section.my-slide table { font-size: 0.7em; }
 
 ---
 
-## CSS design decisions — understand before editing
+## Critical CSS design rules
 
 Three areas of the beamer CSS require non-obvious rules. Each rule is intentional:
 changing or removing it breaks the visual output in a way that is not immediately
