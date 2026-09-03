@@ -19,8 +19,16 @@
   --primary-dark:   #25259e;
   --primary-darker: #1a1a80;
   --primary-light:  #9999dd;   /* light blue accent — h2 underline, blockquote border */
-  --bg-stripe:      #ededf8;
+  --bg-stripe:      #ededf8;   /* legacy alias — no longer used by any rule; see --code-bg */
   --bg-stripe2:     #f5f5fc;
+
+  /* Inline code chips. Kept separate from --bg-stripe2 on purpose: a chip
+     inside a table sits on top of the even-row fill, so the two must differ
+     in lightness by a visible margin or the chip disappears. See
+     "Inline code chips" in references/beamer-css.md before recolouring. */
+  --code-bg:        #e2e2f4;
+  --code-fg:        #22226b;
+  --code-border:    #c2c2e6;
   --text:           #111122;
   --white:          #ffffff;
 
@@ -349,9 +357,44 @@ img[alt*="left"]   { float: left;  margin: 0.5em 1em 0.5em 0; }
    Inline code
    ──────────────────────────────────────────────────────── */
 code {
-  background: var(--bg-stripe);
-  padding: 0.15em 0.4em;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);   /* keeps the chip edge readable on any row fill */
+  padding: 0.1em 0.35em;
   border-radius: 0.3em;
   font-size: 0.85em;
   font-family: monospace;
+}
+
+/* Fenced code blocks reuse the chip fill but drop the chip framing */
+pre code { border: none; background: none; padding: 0; }
+
+
+/* ────────────────────────────────────────────────────────
+   Per-slide utility classes
+
+   Apply with  <!-- _class: name -->  on the target slide.
+   Multiple classes are space-separated:  <!-- _class: tight small-text -->
+
+   These live in the theme so a deck's frontmatter style: block only ever
+   carries a palette. Do not re-declare them per deck.
+   ──────────────────────────────────────────────────────── */
+section.small-text  { font-size: 19px; }
+section.tight       { line-height: 1.3; }
+section.tight ul,
+section.tight ol    { line-height: 1.5; }
+section.vcenter     { justify-content: center; }
+section.center-table table  { margin: 0.5em auto; }
+section.small-table table   { font-size: 0.72em; }
+section.wide-table table    { max-width: 100%; width: 100%; }
+section.large-text  { font-size: 26px; }
+section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
+section.wide-quote blockquote { max-width: 100%; }
+
+/* Bold centred label above a figure */
+.fig-title {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.2em;
+  font-size: 0.9em;
 }

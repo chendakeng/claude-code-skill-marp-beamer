@@ -23,6 +23,8 @@ Read only the reference file(s) relevant to the current task. Do not load all fi
 | Generating a new deck or slide from a template | `references/slide-templates.md` |
 | Setting up VS Code + registering the theme | `references/marpit-syntax.md` (§ VS Code setup) |
 | Copying the ready-to-use CSS file | `assets/beamer.css` |
+| Recolouring a deck for an institution | `references/beamer-css.md` (§ Customising the colour scheme) |
+| Rendering to PDF/PNG from the terminal | `references/marpit-syntax.md` (§ Rendering from the CLI) |
 | Appendix TOC with clickable links + back buttons | `references/slide-templates.md` (§ Appendix navigation) |
 | Speaker notes + presenter mode | `references/marpit-syntax.md` (§ Speaker notes) |
 
@@ -68,7 +70,7 @@ section.my-slide table { font-size: 0.7em; }
 
 ## Critical CSS design rules
 
-Three areas of the beamer CSS require non-obvious rules. Each rule is intentional:
+Four areas of the beamer CSS require non-obvious rules. Each rule is intentional:
 changing or removing it breaks the visual output in a way that is not immediately
 obvious from the CSS alone.
 
@@ -127,6 +129,28 @@ list below it — tight enough to look grouped, loose enough to breathe.
 
 ---
 
+### 4 — Inline code chips have their own tokens, and keep their border
+
+```css
+code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+}
+```
+
+A chip inside a table sits on the even-row fill (`--bg-stripe2`), not on the white
+slide background. If the two are the same hue at a similar lightness, the chip
+vanishes and the code token reads as body text. The chip therefore gets tokens of
+its own rather than borrowing a stripe colour, and the border stays so the edge
+survives even when the fills are close.
+
+When recolouring a deck, set `--code-bg` clearly darker than `--bg-stripe2` and
+verify on an *even* table row. Details and the palette recipe:
+`references/beamer-css.md`.
+
+---
+
 ## Quick-start checklist for a new deck
 
 1. Copy `assets/beamer.css` → `.vscode/beamer.css` in the project
@@ -136,6 +160,32 @@ list below it — tight enough to look grouped, loose enough to breathe.
    ```
 3. Reload VS Code window (`Cmd+Shift+P → Reload Window`)
 4. Add frontmatter: `marp: true`, `theme: beamer`, `paginate: true`, `footer: '**Author** **Title** **Venue**'`
-5. First slide: `<!-- _class: title -->`
-6. Each section: `<!-- header: 'Section Name' -->` (local — persists forward)
-7. Blank header on one slide: `<!-- _header: '' -->` (spot — this slide only)
+5. Add a palette to the frontmatter `style:` block — 8 tokens, all together
+   (`references/beamer-css.md` § Customising the colour scheme). Nothing else
+   belongs there: the `section.*` utility classes are already in the theme.
+6. First slide: `<!-- _class: title -->`
+7. Each section: `<!-- header: 'Section Name' -->` (local — persists forward)
+8. Blank header on one slide: `<!-- _header: '' -->` (spot — this slide only)
+9. Render with `--theme-set` pointing at the CSS — the CLI ignores
+   `settings.json` and falls back to a generic theme with exit code 0
+
+**If the deck lives in a subfolder that may be opened as its own VS Code
+workspace, mirror `.vscode/beamer.css` and `.vscode/settings.json` into it too.**
+
+---
+
+## Where a change belongs
+
+The recurring judgment call in this skill. Answer it before writing CSS anywhere.
+
+| The change is… | Put it in |
+|----------------|-----------|
+| Structural, or any `section.*` utility class | `assets/beamer.css`, then sync every project copy |
+| This deck's colours, body font, or a token value this deck alone needs | The deck's frontmatter `style:` block |
+| One word or phrase on one slide | Inline `<span style="…">` |
+
+A `section.*` rule appearing in a deck's frontmatter means the rule belongs in the
+theme. Two decks that both need it will otherwise drift apart, and a fix to one
+never reaches the other. This happened with the first two decks built on this
+skill: both carried the same eight copy-pasted utility rules until they were
+promoted into `beamer.css`.

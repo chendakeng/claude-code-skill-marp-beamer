@@ -39,8 +39,11 @@ per-deck in the frontmatter `style:` block — no CSS file editing needed.
   --primary-dark:   #25259e;   /* footer centre, definition block body, table th border */
   --primary-darker: #1a1a80;   /* footer left segment */
   --primary-light:  #9999dd;   /* light blue accent — h2 underline, standard blockquote left border */
-  --bg-stripe:      #ededf8;   /* inline code background */
+  --bg-stripe:      #ededf8;   /* legacy alias — no rule reads it; see --code-bg */
   --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
+  --code-bg:        #e2e2f4;   /* inline code chip fill */
+  --code-fg:        #22226b;   /* inline code chip text */
+  --code-border:    #c2c2e6;   /* inline code chip border */
   --text:           #111122;   /* body text colour */
   --white:          #ffffff;   /* slide background, header/footer text */
 
@@ -367,6 +370,72 @@ All require `"markdown.marp.html": true` in `.vscode/settings.json`.
 
 ---
 
+## Inline code chips — the table-stripe collision
+
+Inline `` `code` `` renders as a chip: a filled, bordered box. It has its own three
+tokens rather than borrowing a stripe colour, because of where chips end up:
+
+```css
+code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+}
+```
+
+**The failure this prevents.** A chip inside a table sits on top of the even-row
+fill (`--bg-stripe2`), not on the white slide background. If the chip fill and the
+row fill are the same hue at a similar lightness, the chip boundary disappears and
+the code token reads as ordinary body text. This is easy to introduce without
+noticing: it appears only on even rows, and only on slides where a chip lands
+inside a table.
+
+The original theme filled chips with `--bg-stripe` (`#ededf8`) against a
+`--bg-stripe2` row (`#f5f5fc`), a lightness difference of roughly 3%. That is
+invisible in practice. It was found on the APSA 2026 deck, where a monochrome
+blue palette made the collision worse than in the default purple-blue.
+
+**Two rules when recolouring:**
+
+1. `--code-bg` must be clearly darker than `--bg-stripe2` — target at least a 10%
+   lightness gap, and check the chip on an *even* table row, not on the slide
+   background where it always looks fine.
+2. Keep the border. It is what carries the chip edge when the fill and the row
+   happen to be close, and it costs nothing when they are not.
+
+A palette whose chips sit off the primary hue entirely (a warm sand chip on a blue
+deck, for example) separates most strongly, at the cost of introducing a second
+hue. Both readings are defensible; the monochrome one is the theme default because
+it keeps an academic deck to a single colour family.
+
+**Fenced code blocks** reuse the fill but drop the framing, since a multi-line
+block does not need to read as an inline token:
+
+```css
+pre code { border: none; background: none; padding: 0; }
+```
+
+---
+
+## Per-slide utility classes live in the theme
+
+`section.small-text`, `.tight`, `.vcenter`, `.center-table`, `.small-table`,
+`.wide-table`, `.large-text`, `.wide-defblock`, `.wide-quote` and `.fig-title` are
+defined in `beamer.css` itself. A deck applies them with `<!-- _class: name -->`
+and does **not** re-declare them in its frontmatter.
+
+This was not always true. The first two decks built with this skill each carried
+the same eight-line block of `section.*` rules copy-pasted into their frontmatter,
+which meant a fix to one deck's spacing never reached the other. If a deck needs a
+different value, override just that one rule in its `style:` block:
+
+```yaml
+style: |
+  section.small-text { font-size: 18px; }   /* theme default is 19px */
+```
+
+---
+
 ## Customising the colour scheme
 
 The theme uses 6 static hex tokens. All 6 must be set together — changing only
@@ -399,13 +468,36 @@ and allow exact matching to a reference palette rather than algorithmic approxim
 
 **Preset palettes:**
 
-| Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe` | `--bg-stripe2` |
-|--------|-------------|------------------|--------------------|-------------------|---------------|----------------|
-| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#ededf8` | `#f5f5fc` |
-| CUHK purple & gold | `#73216d` | `#5a1957` | `#3f1240` | `#dda300` | `#f4dfb0` | `#faf4e8` |
-| Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#e0f2ee` | `#f0faf8` |
-| Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#f5e0e4` | `#faf0f2` |
-| Slate grey | `#3d4f6b` | `#2f3e56` | `#202c3f` | `#8d9db5` | `#e8ebf0` | `#f3f4f7` |
+| Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe2` | `--code-bg` | `--code-fg` | `--code-border` |
+|--------|-------------|------------------|--------------------|-------------------|----------------|-------------|-------------|-----------------|
+| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#f5f5fc` | `#e2e2f4` | `#22226b` | `#c2c2e6` |
+| SCNU / conference blue | `#1B5FA8` | `#154A85` | `#0F3663` | `#5B9BD5` | `#F5F9FD` | `#DCE7F6` | `#10406F` | `#B4CCE6` |
+| CUHK purple & gold | `#73216d` | `#5a1957` | `#3f1240` | `#dda300` | `#faf4e8` | `#f4dfb0` | `#5a3a06` | `#dcc084` |
+| Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#f0faf8` | `#dcefeb` | `#0d3830` | `#b3d8d1` |
+| Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#faf0f2` | `#f2dde1` | `#4a0f1a` | `#dfb9c1` |
+| Slate grey | `#3d4f6b` | `#2f3e56` | `#202c3f` | `#8d9db5` | `#f3f4f7` | `#e4e7ed` | `#202c3f` | `#c8cedb` |
+
+### Deriving a palette from one institutional colour
+
+Both decks built with this skill took their palette from a university's identity
+guidelines. The procedure is mechanical once you have the primary hex:
+
+| Token | How to derive |
+|-------|---------------|
+| `--primary` | The institution's primary colour, taken from its identity guidelines rather than sampled from a logo JPEG |
+| `--primary-dark` | `--primary` at ~85% lightness |
+| `--primary-darker` | `--primary` at ~70% lightness |
+| `--primary-light` | The institution's *secondary* colour if it has one (CUHK gold `#dda300`), otherwise `--primary` lightened to ~65% |
+| `--bg-stripe2` | `--primary` at ~4% saturation — a barely-there tint for table rows |
+| `--code-bg` | `--primary` at ~15% saturation, or the secondary colour heavily lightened. Check it against `--bg-stripe2`, see "Inline code chips" above |
+| `--code-fg` | `--primary-darker`, or a dark neutral of the chip's own hue |
+| `--code-border` | Midway between `--code-bg` and `--code-fg`, closer to the fill |
+
+CUHK is the useful worked example because it has two brand colours: purple carries
+the structural furniture (header, footer, table headers) and gold carries the
+accents (h2 underline, blockquote border, code chips). A single-colour institution
+gives the monochrome variant instead, as in the SCNU blue row above, and there the
+chip contrast rule matters much more.
 
 To generate a custom palette from a reference image or brand colour, share the
-hex/image with Claude and ask for a 6-token block.
+hex/image with Claude and ask for a full token block.

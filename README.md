@@ -69,31 +69,21 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    footer: '**Author** **Title** **Venue · Date**'
    style: |
      :root {
-       /* ── Colour palette (change --primary to recolour everything) ── */
+       /* ── Colour palette — the only block most decks need ── */
        --primary:        #3333b2;
        --primary-dark:   #25259e;
        --primary-darker: #1a1a80;
        --primary-light:  #9999dd;   /* h2 underline, blockquote border */
-       --bg-stripe:      #ededf8;
-       --bg-stripe2:     #f5f5fc;
-
-       /* ── Layout & typography ── */
-       --font-size:  22px;
-       --pad-x:      2.5rem;
-       --header-h:   2.4rem;
-       --footer-h:   1.4rem;
-       --radius:     0.45rem;
-
-       /* ── Element widths ── */
-       --defblock-width:   88%;
-       --table-max-width:  92%;
-       --blockquote-width: 90%;
-       --img-max-width:    80%;
-       --title-h1-width:   85%;
+       --bg-stripe2:     #f5f5fc;   /* table even rows */
+       --code-bg:        #e2e2f4;   /* inline code chip fill */
+       --code-fg:        #22226b;
+       --code-border:    #c2c2e6;
      }
    ---
    ```
-   Every token is overridable per-deck — delete what you don't need to change, or keep them all as a self-documenting control panel.
+   Set the 8 colour tokens together; partial overrides leave mismatched shades. Layout tokens (`--font-size`, `--pad-x`, `--img-max-width`, …) are overridable the same way when a deck needs them — see the token tables below.
+
+   Do **not** put `section.*` utility classes here. They ship in the theme.
 
 ## Theme tokens
 
@@ -107,10 +97,17 @@ All design values are CSS custom properties. Override any of them per-deck in th
 | `--primary-dark` | `#25259e` | Footer centre segment, definition block body, table th border |
 | `--primary-darker` | `#1a1a80` | Footer left segment (darkest) |
 | `--primary-light` | `#9999dd` | **h2 underline · standard blockquote left border** — light blue accent |
-| `--bg-stripe` | `#ededf8` | Inline code background |
+| `--bg-stripe` | `#ededf8` | Legacy alias — no rule reads it. Superseded by `--code-bg` |
 | `--bg-stripe2` | `#f5f5fc` | Table even-row tint, standard blockquote background |
+| `--code-bg` | `#e2e2f4` | Inline code chip fill |
+| `--code-fg` | `#22226b` | Inline code chip text |
+| `--code-border` | `#c2c2e6` | Inline code chip border |
 
-Always set all 6 colour tokens together — partial overrides leave mismatched shades. See `references/beamer-css.md` for preset palettes (teal, burgundy, slate grey).
+Always set all 8 colour tokens together — partial overrides leave mismatched shades.
+
+**`--code-bg` must stay clearly darker than `--bg-stripe2`.** A code chip inside a table sits on the even-row fill, so if the two are close the chip disappears and the token reads as body text. Check chips on an *even* table row, not on the slide background where they always look fine.
+
+See `references/beamer-css.md` for preset palettes (SCNU blue, CUHK purple & gold, teal, burgundy, slate grey) and the recipe for deriving a palette from one institutional colour.
 
 ### Layout & typography
 
@@ -142,17 +139,35 @@ style: |
 
 ## Per-slide overrides
 
-CSS variables set in `:root` apply deck-wide. To override a specific element on
-**one slide only**, use named CSS classes scoped to `section.classname` in the
-frontmatter `style:` block, then apply with `<!-- _class: name -->` on that slide.
+CSS variables set in `:root` apply deck-wide. To change one slide only, apply a
+utility class with `<!-- _class: name -->`. The theme ships these:
+
+| Class | Effect |
+|:------|:-------|
+| `small-text` | 19px body text |
+| `large-text` | 26px body text |
+| `tight` | Tighter line height (1.3), lists stay at 1.5 |
+| `vcenter` | Vertically centres the slide's content |
+| `center-table` | Centres the table horizontally |
+| `small-table` | Table text at 0.72em |
+| `wide-table` | Table spans the full content width |
+| `wide-defblock` | Definition block spans the full content width |
+| `wide-quote` | Standard blockquote spans the full content width |
+
+```markdown
+<!-- _class: small-text tight -->
+```
+
+Because they live in the theme, decks do not declare them. If a deck needs a
+different value, override that one rule in its `style:` block:
 
 ```yaml
 style: |
-  /* Per-slide tweaks — add as many as you need */
-  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
-  section.wide-table table { max-width: 100%; width: 100%; }
-  section.small-text { font-size: 18px; }
+  section.small-text { font-size: 18px; }   /* theme default is 19px */
 ```
+
+A brand-new `section.*` rule in a deck's frontmatter is a signal it belongs in
+`assets/beamer.css` instead — otherwise two decks needing it will drift apart.
 
 ```markdown
 <!-- _class: wide-defblock -->
@@ -185,12 +200,8 @@ The theme ships two CSS utility classes for centering content. Unlike `![center]
 | `.center` | `<div class="center">text</div>` | Centers text and inline content; also auto-centers any `<table>` inside |
 | `.caption` | `<div class="caption">Figure 1.</div>` | Centered, `0.78em`, grey — for figure labels |
 
-**Centering a markdown table** requires a slide-level class (markdown tables can't be wrapped in a `<div>`). Add to the frontmatter `style:` block and apply on the slide:
+**Centering a markdown table** requires a slide-level class, since markdown tables can't be wrapped in a `<div>`. `center-table` ships in the theme, so just apply it:
 
-```yaml
-style: |
-  section.center-table table { margin: 0.5em auto; }
-```
 ```markdown
 <!-- _class: center-table -->
 

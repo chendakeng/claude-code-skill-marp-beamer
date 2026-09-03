@@ -261,6 +261,48 @@ the `@theme` name in the CSS comment header.
 
 ---
 
+## Rendering from the CLI
+
+```bash
+marp deck.md --allow-local-files \
+  --theme-set /abs/path/to/.vscode/beamer.css \
+  --pdf -o deck.pdf
+```
+
+**`--theme-set` is mandatory.** The Marp CLI does not read
+`.vscode/settings.json` — `markdown.marp.themes` is understood by the VS Code
+extension only. Omit the flag and the CLI silently falls back to Marp's generic
+default theme: no header bar, no footer, wrong colours, and **exit code 0**. A
+clean exit is not evidence the render worked. Open the PDF and look at it.
+
+Other flags worth knowing:
+
+| Flag | Why |
+|------|-----|
+| `--allow-local-files` | Required whenever the deck references local images. Prints an insecure-access warning; that warning is expected, not an error |
+| `--images png` | Renders each slide to a numbered PNG instead of a PDF. The fast way to check one slide's appearance without opening a 9 MB PDF |
+| `--html` | Self-contained HTML export, needed for presenter mode |
+
+### Checking one slide quickly
+
+To iterate on a single slide's styling, extract that slide plus the deck's
+frontmatter into a scratch `.md` and render it with `--images png`. Rendering a
+full deck to PDF takes long enough to discourage the iteration that visual work
+actually needs.
+
+### Theme copies in sub-workspace folders
+
+A project keeps `beamer.css` at its root in `.vscode/`. If a subfolder (a
+conference folder, say) is ever opened as its own VS Code workspace, the extension
+looks for `.vscode/` relative to *that* folder and finds nothing. Mirror both
+`beamer.css` and `settings.json` into the subfolder's own `.vscode/`.
+
+The mirrored copy is a copy, so it can drift. When changing the theme, change
+every copy in the project in the same pass, and keep them identical to the
+skill's `assets/beamer.css` apart from deliberate, documented differences.
+
+---
+
 ## Speaker notes
 
 Speaker notes are written as HTML comments at the end of each slide's content

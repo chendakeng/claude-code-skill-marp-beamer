@@ -13,43 +13,19 @@ math: katex
 footer: '**[Author Name]** **[Presentation Title]** **[Venue · Date]**'
 style: |
   :root {
-    /* ── Colour palette (change --primary to recolour everything) ── */
-    --primary:        #3333b2;   /* header bar, table headers, definition title, h2 underline */
+    /* ── Colour palette — the only block most decks need ── */
+    --primary:        #3333b2;   /* header bar, table headers, definition title */
     --primary-dark:   #25259e;   /* footer centre, definition body */
     --primary-darker: #1a1a80;   /* footer left segment */
     --primary-light:  #9999dd;   /* h2 underline, standard blockquote left border */
-    --bg-stripe:      #ededf8;   /* inline code background */
     --bg-stripe2:     #f5f5fc;   /* table even rows, standard blockquote background */
-
-    /* ── Layout & typography ── */
-    --font-size:  22px;    /* base text size */
-    --pad-x:      2.5rem;  /* left/right content padding */
-    --header-h:   2.4rem;  /* top header bar height */
-    --footer-h:   1.4rem;  /* bottom footer bar height */
-    --radius:     0.45rem; /* border radius everywhere */
-
-    /* ── Element widths ── */
-    --defblock-width:   88%;  /* definition block: > #### Title */
-    --table-max-width:  92%;  /* tables */
-    --blockquote-width: 90%;  /* standard blockquotes */
-    --img-max-width:    80%;  /* inline images */
-    --title-h1-width:   85%;  /* title-slide h1 box */
+    --code-bg:        #e2e2f4;   /* inline code chip fill — keep clearly darker than --bg-stripe2 */
+    --code-fg:        #22226b;   /* inline code chip text */
+    --code-border:    #c2c2e6;   /* inline code chip border */
   }
 
-  /* ── Per-slide overrides (apply with <!-- _class: name -->) ──
-     Rules MUST be scoped with section.classname to avoid bleeding.
-     _style is NOT a valid Marp directive — use _class instead.
-     :root variable overrides do NOT work inside _class rules.       */
-  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
-  section.wide-table table { max-width: 100%; width: 100%; }
-  section.small-table table { font-size: 0.7em; }
-  section.center-table table { margin: 0.5em auto; }
-  section.small-text { font-size: 18px; }
-  section.large-text { font-size: 26px; }
-  section.tight { line-height: 1.3; }
-  section.tight ul, section.tight ol { line-height: 1.5; }
-  section.vcenter { justify-content: center; }
-  section.wide-quote blockquote { max-width: 100%; }
+  /* Serif body text for an academic deck (optional — theme default is Roboto) */
+  section { font-family: "Cambria", "Georgia", "Palatino", serif; }
 ---
 
 <!-- _class: title -->
@@ -114,6 +90,48 @@ Content continues here.
 
 > *[One-sentence closing message or key takeaway.]*
 ```
+
+---
+
+### What the frontmatter should and should not carry
+
+The `style:` block above is deliberately short. Everything structural, including
+all `section.*` utility classes, lives in `beamer.css`. A deck carries only what
+is genuinely deck-specific:
+
+| Belongs in the deck frontmatter | Belongs in `beamer.css` |
+|---------------------------------|-------------------------|
+| The colour palette | Layout, spacing, element widths |
+| A body font override | All `section.*` utility classes |
+| One-off fixes for this deck's content (e.g. `table td { border-color: … }` to match a new palette) | `.center`, `.caption`, `.fig-title` |
+| Layout tokens this deck alone needs different (`--font-size`, `--img-max-width`) | Everything else |
+
+Adding a `section.*` rule to a deck's frontmatter is a signal that the rule
+belongs in the theme instead. Two decks that both need it will otherwise drift.
+
+**Layout tokens are still available** when a deck needs them — override in `:root`
+exactly like the palette:
+
+```yaml
+style: |
+  :root {
+    --font-size:        20px;   /* default 22px */
+    --pad-x:            2.5rem;
+    --header-h:         2.4rem;
+    --footer-h:         1.4rem;
+    --radius:           0.45rem;
+    --defblock-width:   88%;
+    --table-max-width:  92%;
+    --blockquote-width: 90%;
+    --img-max-width:    100%;
+    --title-h1-width:   85%;
+  }
+```
+
+Override these in the frontmatter, never by editing a project's copy of
+`beamer.css`. Editing the CSS makes that copy diverge from the skill's `assets/`
+version, and the divergence is invisible until a later deck inherits the wrong
+default.
 
 ---
 
@@ -254,12 +272,19 @@ style: |
     --primary-dark:   #5a1957;
     --primary-darker: #3f1240;
     --primary-light:  #dda300;   /* CUHK gold — h2 underline, blockquote border */
-    --bg-stripe:      #f4dfb0;   /* light gold — inline code bg */
     --bg-stripe2:     #faf4e8;   /* warm cream — table even rows */
+    --code-bg:        #f4dfb0;   /* light gold — code chip fill */
+    --code-fg:        #5a3a06;
+    --code-border:    #dcc084;
   }
 ```
 
-See the preset palette table in `beamer-css.md` for CUHK, teal, burgundy, and slate grey.
+Set all eight together. A partial override leaves mismatched shades, and leaving
+the `--code-*` tokens at their blue defaults puts a blue chip on a gold deck.
+
+See the preset palette table in `beamer-css.md` for SCNU blue, CUHK, teal,
+burgundy, and slate grey, plus the recipe for deriving a palette from a single
+institutional colour.
 
 ---
 
