@@ -78,10 +78,11 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
        --code-bg:        #e2e2f4;   /* inline code chip fill */
        --code-fg:        #22226b;
        --code-border:    #c2c2e6;
+       --table-border:   #d0d0e8;   /* table cell borders */
      }
    ---
    ```
-   Set the 8 colour tokens together; partial overrides leave mismatched shades. Layout tokens (`--font-size`, `--pad-x`, `--img-max-width`, …) are overridable the same way when a deck needs them — see the token tables below.
+   Set the 9 colour tokens together; partial overrides leave mismatched shades. Layout tokens (`--font-size`, `--pad-x`, `--img-max-width`, …) are overridable the same way when a deck needs them — see the token tables below.
 
    Do **not** put `section.*` utility classes here. They ship in the theme.
 
@@ -102,8 +103,11 @@ All design values are CSS custom properties. Override any of them per-deck in th
 | `--code-bg` | `#e2e2f4` | Inline code chip fill |
 | `--code-fg` | `#22226b` | Inline code chip text |
 | `--code-border` | `#c2c2e6` | Inline code chip border |
+| `--table-border` | `#d0d0e8` | Table cell borders — recolour with the palette |
+| `--muted` | `#555555` | Title-slide h3 and title blockquote |
+| `--caption-fg` | `#666666` | `.caption` text |
 
-Always set all 8 colour tokens together — partial overrides leave mismatched shades.
+Always set the 9 palette tokens together — partial overrides leave mismatched shades. `--muted` and `--caption-fg` are hue-neutral greys and rarely need changing.
 
 **`--code-bg` must stay clearly darker than `--bg-stripe2`.** A code chip inside a table sits on the even-row fill, so if the two are close the chip disappears and the token reads as body text. Check chips on an *even* table row, not on the slide background where they always look fine.
 

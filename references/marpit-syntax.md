@@ -73,12 +73,15 @@ Spot equivalents: prefix any of the above with `_`:
 directives support the `_` spot prefix (`_class`, `_header`, `_footer`,
 `_backgroundColor`, etc.). `style` is frontmatter-only and applies globally.
 
-To style elements on one slide only, define a named class in the frontmatter
-`style:` block and apply it with `<!-- _class: name -->`:
+To style one slide only, apply a class with `<!-- _class: name -->`. The theme
+ships nine: `small-text`, `large-text`, `tight`, `vcenter`, `center-table`,
+`small-table`, `wide-table`, `wide-defblock`, `wide-quote`.
+
+For anything they do not cover, define a class in the deck's frontmatter — scoped
+to `section.classname`, or the rule bleeds to every slide:
 
 ```yaml
 style: |
-  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
   section.dense table { font-size: 0.7em; }
 ```
 
@@ -148,9 +151,8 @@ an `alt` attribute CSS can target. The beamer theme provides two utility classes
 <div class="caption">Figure 1. Caption text here</div>
 ```
 
-**Centering a markdown table** — tables cannot be wrapped in a `<div>`. Use a slide-level
-class. Add `section.center-table table { margin: 0.5em auto; }` to the frontmatter
-`style:` block, then apply `<!-- _class: center-table -->` on the slide.
+**Centering a markdown table** — tables cannot be wrapped in a `<div>`. Apply
+`<!-- _class: center-table -->` on the slide; the class ships in the theme.
 
 All require `"markdown.marp.html": true` in `.vscode/settings.json`.
 

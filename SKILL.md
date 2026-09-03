@@ -42,10 +42,12 @@ Level 1 — Deck-wide (all slides)
   → Examples: --font-size, --pad-x, --primary, --table-max-width
 
 Level 2 — Per-slide (one slide only)
-  → Define section.classname { ... } in frontmatter style:
-  → Apply with <!-- _class: classname --> on that slide
+  → Apply a class with <!-- _class: classname --> on that slide
+  → Nine ship in the theme: small-text, large-text, tight, vcenter,
+    center-table, small-table, wide-table, wide-defblock, wide-quote
   → Multiple classes are space-separated
-  → Examples: section.small-text, section.wide-table, section.center-table
+  → Define section.classname { ... } in frontmatter style: ONLY for what
+    those nine do not cover, or to change one of their values
 
 Level 3 — Inline (specific element, word, or line)
   → Use <span style="..."> for words/phrases
@@ -149,6 +151,12 @@ When recolouring a deck, set `--code-bg` clearly darker than `--bg-stripe2` and
 verify on an *even* table row. Details and the palette recipe:
 `references/beamer-css.md`.
 
+The same failure had a second instance: table cell borders were hardcoded
+`#d0d0e8`, so every recoloured deck patched them by hand in its frontmatter. They
+are now `--table-border`. **Any colour a palette should control must be a token** —
+a hardcoded hex in the theme becomes a per-deck workaround that each deck has to
+rediscover.
+
 ---
 
 ## Quick-start checklist for a new deck
@@ -160,7 +168,7 @@ verify on an *even* table row. Details and the palette recipe:
    ```
 3. Reload VS Code window (`Cmd+Shift+P → Reload Window`)
 4. Add frontmatter: `marp: true`, `theme: beamer`, `paginate: true`, `footer: '**Author** **Title** **Venue**'`
-5. Add a palette to the frontmatter `style:` block — 8 tokens, all together
+5. Add a palette to the frontmatter `style:` block — 9 colour tokens, all together
    (`references/beamer-css.md` § Customising the colour scheme). Nothing else
    belongs there: the `section.*` utility classes are already in the theme.
 6. First slide: `<!-- _class: title -->`

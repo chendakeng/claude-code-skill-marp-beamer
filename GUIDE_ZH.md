@@ -12,7 +12,7 @@
 
 - 编写 Marp 幻灯片（Marpit 指令、图片语法、数学公式、VS Code 配置）
 - 从零构建 beamer 风格 CSS 主题
-- 诊断并修复两个最常见的 beamer CSS 问题
+- 诊断并修复四个 beamer CSS 问题（阴影列、缝隙线、段落间距、代码块底色）
 - 生成学术演讲的幻灯片模板
 
 ## 技能结构
@@ -54,7 +54,7 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
 1. 将 `assets/beamer.css` 复制到项目的 `.vscode/beamer.css`
 2. 创建 `.vscode/settings.json`：
    ```json
-   { "markdown.marp.themes": [".vscode/beamer.css"] }
+   { "markdown.marp.themes": [".vscode/beamer.css"], "markdown.marp.html": true }
    ```
 3. 重载 VS Code（`Cmd+Shift+P → Reload Window`）
 4. 在 `.md` 文件中添加 frontmatter：
@@ -71,7 +71,47 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    - "我的 Marp 表格右边有奇怪的阴影列，怎么修复？"
    - "定义块的标题栏和正文之间有一条细线"
 
-## 本技能修复的两个 CSS 问题
+## 配色：九个颜色变量，一次全改
+
+主题的所有配色集中在 `:root` 的九个变量。在 frontmatter 的 `style:` 中整体覆盖，
+不要只改 `--primary`，否则其余色阶仍停留在原色系：
+
+```yaml
+style: |
+  :root {
+    --primary:        #73216d;   /* 标题栏、表头、定义块标题 */
+    --primary-dark:   #5a1957;   /* 页脚中段、定义块正文 */
+    --primary-darker: #3f1240;   /* 页脚左段 */
+    --primary-light:  #dda300;   /* h2 下划线、引用块左边框 */
+    --bg-stripe2:     #faf4e8;   /* 表格偶数行 */
+    --code-bg:        #f4dfb0;   /* 行内代码底色 */
+    --code-fg:        #5a3a06;   /* 行内代码文字 */
+    --code-border:    #dcc084;   /* 行内代码边框 */
+    --table-border:   #e5d8e4;   /* 表格线 */
+  }
+```
+
+以上为 CUHK 紫金配色。其他预设（SCNU 蓝、青、酒红、灰蓝）及"从一个校色推导整套
+配色"的方法见 `references/beamer-css.md`。
+
+**九个变量之外不要再写 `section.*` 规则。** 主题已内置九个单页样式类
+（`small-text`、`large-text`、`tight`、`vcenter`、`center-table`、`small-table`、
+`wide-table`、`wide-defblock`、`wide-quote`），用 `<!-- _class: 名称 -->` 直接调用即可。
+若某条规则两个 deck 都需要，应写进 `beamer.css`，而不是各自复制到 frontmatter。
+
+## 命令行渲染
+
+```bash
+marp deck.md --allow-local-files \
+  --theme-set /绝对路径/.vscode/beamer.css \
+  --pdf -o deck.pdf
+```
+
+**`--theme-set` 必须显式传入。** Marp CLI 不读取 `.vscode/settings.json`（那是
+VS Code 插件专用配置）。缺少该参数时，CLI 会静默回退到 Marp 默认主题：没有标题栏、
+没有页脚、配色全错，**而退出码仍是 0**。渲染成功不等于渲染正确，务必打开 PDF 查看。
+
+## 本技能修复的 CSS 问题
 
 ### 问题一：表格阴影列
 
@@ -104,6 +144,40 @@ blockquote:has(> h4) p  { border-radius: 0; }
 ```
 
 **设计原则：** `overflow: hidden` 让父元素的 `border-radius` 统一裁切所有子元素，子元素无需各自设置圆角。
+
+### 问题三：行内代码在表格中"消失"
+
+**症状：** 表格单元格里的行内代码（`` `字段名` ``）看不出是代码，与正文无异。
+
+**原因：** 代码底色原本取 `--bg-stripe`，而表格偶数行底色取 `--bg-stripe2`。
+代码块在表格中是叠在行底色之上，两者若同色系且明度接近（APSA 蓝色 deck 中相差约 2%），
+边界就完全消失。
+
+**修复方案：** 代码块使用独立变量，并保留 1px 边框：
+
+```css
+code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+}
+```
+
+**设计原则：** 换配色时 `--code-bg` 必须明显深于 `--bg-stripe2`，并且要在**偶数行**
+上检查，而不是在白色幻灯片背景上，后者永远看起来正常。
+
+### 问题四：段落上下多出的间距
+
+**症状：** 加粗小标题与其下列表之间出现约 0.75em 的空隙。
+
+**原因：** 主题里的 `* { margin: 0 }` 特异性为 0-0-0，而 Marp 内置样式表的
+`p { margin: 0.5em 0 }` 特异性为 0-0-1，后者永远胜出。
+
+**修复方案：** 用元素级选择器显式覆盖：
+
+```css
+p { margin: 0.15em 0; }
+```
 
 ## 幻灯片模板示例
 

@@ -29,6 +29,14 @@
   --code-bg:        #e2e2f4;
   --code-fg:        #22226b;
   --code-border:    #c2c2e6;
+
+  /* Palette-dependent greys. --table-border must be recoloured with the
+     palette; a deck that leaves it at the default gets blue-purple cell
+     borders on a non-blue deck. --muted and --caption-fg are hue-neutral
+     and rarely need changing. */
+  --table-border:   #d0d0e8;
+  --muted:          #555555;
+  --caption-fg:     #666666;
   --text:           #111122;
   --white:          #ffffff;
 
@@ -191,7 +199,7 @@ table th:first-child { text-align: left; }
 
 table td {
   padding: 0.35em 0.9em;
-  border: 1px solid #d0d0e8;
+  border: 1px solid var(--table-border);
   vertical-align: middle;
 }
 
@@ -289,13 +297,13 @@ section.title h2 {
 section.title h3 {
   font-weight: 300;
   font-size: 0.85em;
-  color: #555;
+  color: var(--muted);
 }
 
 /* Title slide blockquote: plain text, no box */
 section.title blockquote {
   all: unset;
-  color: #555;
+  color: var(--muted);
   font-style: italic;
   font-size: 0.9em;
 }
@@ -349,7 +357,7 @@ img[alt*="left"]   { float: left;  margin: 0.5em 1em 0.5em 0; }
 .caption {
   text-align: center;
   font-size: 0.78em;
-  color: #666;
+  color: var(--caption-fg);
   margin: 0.2em 0 0.5em;
 }
 

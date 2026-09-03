@@ -44,6 +44,9 @@ per-deck in the frontmatter `style:` block — no CSS file editing needed.
   --code-bg:        #e2e2f4;   /* inline code chip fill */
   --code-fg:        #22226b;   /* inline code chip text */
   --code-border:    #c2c2e6;   /* inline code chip border */
+  --table-border:   #d0d0e8;   /* table cell borders — recolour with the palette */
+  --muted:          #555555;   /* title-slide h3 and title blockquote */
+  --caption-fg:     #666666;   /* .caption */
   --text:           #111122;   /* body text colour */
   --white:          #ffffff;   /* slide background, header/footer text */
 
@@ -349,13 +352,8 @@ element itself. `.center table` handles this automatically.
 <div class="caption">Figure 1. Predicted margins by year under surveillance</div>
 ```
 
-**Centering a table — markdown tables cannot be wrapped in a `<div>`.** Use a slide-level
-class instead. Add to the frontmatter `style:` block:
-```yaml
-style: |
-  section.center-table table { margin: 0.5em auto; }
-```
-Then on the slide:
+**Centering a table — markdown tables cannot be wrapped in a `<div>`.** Use the
+`center-table` class, which ships in the theme:
 ```markdown
 <!-- _class: center-table -->
 
@@ -438,8 +436,8 @@ style: |
 
 ## Customising the colour scheme
 
-The theme uses 6 static hex tokens. All 6 must be set together — changing only
-`--primary` leaves the dark/stripe variants pointing at blue.
+The theme uses 9 static hex colour tokens. Set all 9 together — changing only
+`--primary` leaves every derived shade pointing at the old hue.
 
 Override them via a `style:` block in the Marp frontmatter (no CSS file editing needed):
 
@@ -453,14 +451,22 @@ style: |
     --primary-dark:   #25259e;   /* footer centre, definition body */
     --primary-darker: #1a1a80;   /* footer left segment */
     --primary-light:  #9999dd;   /* h2 underline, standard blockquote left border */
-    --bg-stripe:      #ededf8;   /* inline code background */
     --bg-stripe2:     #f5f5fc;   /* table even rows, blockquote background */
+    --code-bg:        #e2e2f4;   /* inline code chip fill */
+    --code-fg:        #22226b;   /* inline code chip text */
+    --code-border:    #c2c2e6;   /* inline code chip border */
+    --table-border:   #d0d0e8;   /* table cell borders */
   }
 ---
 ```
 
 Remove the `style:` block entirely to revert to default blue. Always include all
-6 tokens — partial overrides leave mismatched shades.
+9 tokens — partial overrides leave mismatched shades.
+
+**The two easily-forgotten ones are `--code-bg` and `--table-border`**, because
+both were hardcoded in early versions of the theme. A deck that omits them gets
+blue-purple cell borders and a blue code chip on an otherwise purple or gold deck.
+`--muted` and `--caption-fg` are hue-neutral greys and rarely need touching.
 
 **Why static hex, not computed HSL:** CSS relative color syntax (`hsl(from var(…)`)
 requires Chrome 119+. Static tokens work in all Chromium versions Marp might use,
@@ -468,14 +474,14 @@ and allow exact matching to a reference palette rather than algorithmic approxim
 
 **Preset palettes:**
 
-| Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe2` | `--code-bg` | `--code-fg` | `--code-border` |
-|--------|-------------|------------------|--------------------|-------------------|----------------|-------------|-------------|-----------------|
-| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#f5f5fc` | `#e2e2f4` | `#22226b` | `#c2c2e6` |
-| SCNU / conference blue | `#1B5FA8` | `#154A85` | `#0F3663` | `#5B9BD5` | `#F5F9FD` | `#DCE7F6` | `#10406F` | `#B4CCE6` |
-| CUHK purple & gold | `#73216d` | `#5a1957` | `#3f1240` | `#dda300` | `#faf4e8` | `#f4dfb0` | `#5a3a06` | `#dcc084` |
-| Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#f0faf8` | `#dcefeb` | `#0d3830` | `#b3d8d1` |
-| Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#faf0f2` | `#f2dde1` | `#4a0f1a` | `#dfb9c1` |
-| Slate grey | `#3d4f6b` | `#2f3e56` | `#202c3f` | `#8d9db5` | `#f3f4f7` | `#e4e7ed` | `#202c3f` | `#c8cedb` |
+| Scheme | `--primary` | `--primary-dark` | `--primary-darker` | `--primary-light` | `--bg-stripe2` | `--code-bg` | `--code-fg` | `--code-border` | `--table-border` |
+|--------|-------------|------------------|--------------------|-------------------|----------------|-------------|-------------|-----------------|------------------|
+| Beamer blue (default) | `#3333b2` | `#25259e` | `#1a1a80` | `#9999dd` | `#f5f5fc` | `#e2e2f4` | `#22226b` | `#c2c2e6` | `#d0d0e8` |
+| SCNU / conference blue | `#1B5FA8` | `#154A85` | `#0F3663` | `#5B9BD5` | `#F5F9FD` | `#DCE7F6` | `#10406F` | `#B4CCE6` | `#CFE0F0` |
+| CUHK purple & gold | `#73216d` | `#5a1957` | `#3f1240` | `#dda300` | `#faf4e8` | `#f4dfb0` | `#5a3a06` | `#dcc084` | `#e5d8e4` |
+| Dark teal | `#1a6b5c` | `#145246` | `#0d3830` | `#7bbcb0` | `#f0faf8` | `#dcefeb` | `#0d3830` | `#b3d8d1` | `#c4e0da` |
+| Burgundy | `#7a1a2e` | `#621524` | `#4a0f1a` | `#c47a8a` | `#faf0f2` | `#f2dde1` | `#4a0f1a` | `#dfb9c1` | `#e6cdd3` |
+| Slate grey | `#3d4f6b` | `#2f3e56` | `#202c3f` | `#8d9db5` | `#f3f4f7` | `#e4e7ed` | `#202c3f` | `#c8cedb` | `#d5dae2` |
 
 ### Deriving a palette from one institutional colour
 
@@ -492,6 +498,7 @@ guidelines. The procedure is mechanical once you have the primary hex:
 | `--code-bg` | `--primary` at ~15% saturation, or the secondary colour heavily lightened. Check it against `--bg-stripe2`, see "Inline code chips" above |
 | `--code-fg` | `--primary-darker`, or a dark neutral of the chip's own hue |
 | `--code-border` | Midway between `--code-bg` and `--code-fg`, closer to the fill |
+| `--table-border` | `--primary` at ~12% saturation — visible as a grid line, never as a colour |
 
 CUHK is the useful worked example because it has two brand colours: purple carries
 the structural furniture (header, footer, table headers) and gold carries the

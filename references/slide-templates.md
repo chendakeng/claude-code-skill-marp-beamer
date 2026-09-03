@@ -22,6 +22,7 @@ style: |
     --code-bg:        #e2e2f4;   /* inline code chip fill — keep clearly darker than --bg-stripe2 */
     --code-fg:        #22226b;   /* inline code chip text */
     --code-border:    #c2c2e6;   /* inline code chip border */
+    --table-border:   #d0d0e8;   /* table cell borders — recolour with the palette */
   }
 
   /* Serif body text for an academic deck (optional — theme default is Roboto) */
@@ -263,7 +264,7 @@ All examples assume the full deck template frontmatter above.
 
 ### Colour palette — recolour the whole deck
 
-Change all 6 tokens together in `:root`. Partial overrides leave mismatched shades.
+Change all 9 colour tokens together in `:root`. Partial overrides leave mismatched shades.
 
 ```yaml
 style: |
@@ -276,11 +277,13 @@ style: |
     --code-bg:        #f4dfb0;   /* light gold — code chip fill */
     --code-fg:        #5a3a06;
     --code-border:    #dcc084;
+    --table-border:   #e5d8e4;   /* purple-tinted cell borders */
   }
 ```
 
-Set all eight together. A partial override leaves mismatched shades, and leaving
-the `--code-*` tokens at their blue defaults puts a blue chip on a gold deck.
+Set all nine together. A partial override leaves mismatched shades, and leaving
+the `--code-*` and `--table-border` tokens at their blue defaults puts a blue
+chip and blue-purple cell borders on a gold deck.
 
 See the preset palette table in `beamer-css.md` for SCNU blue, CUHK, teal,
 burgundy, and slate grey, plus the recipe for deriving a palette from a single
@@ -310,12 +313,8 @@ style: |
 
 ### Definition block width — one slide only
 
-Define the class once in the frontmatter `style:` block (already in the template):
-```yaml
-  section.wide-defblock blockquote:has(> h4) { max-width: 100%; }
-```
+`wide-defblock` ships in the theme. Just apply it:
 
-Apply on the target slide:
 ```markdown
 <!-- _class: wide-defblock -->
 
@@ -327,11 +326,8 @@ Apply on the target slide:
 
 ### Table width and font — one slide only
 
-```yaml
-  section.wide-table table { max-width: 100%; width: 100%; }
-  section.small-table table { font-size: 0.7em; }   /* default 0.82em */
-  section.small-text { font-size: 18px; }
-```
+`wide-table` (full content width), `small-table` (0.72em table text) and
+`small-text` (19px body text) all ship in the theme. Apply them together:
 
 ```markdown
 <!-- _class: wide-table small-table -->
@@ -403,10 +399,7 @@ The theme provides `.center` (general) and `.caption` (figure label) utilities.
 
 **Center a table** — markdown tables cannot be wrapped in a `<div>`. Use a slide-level
 class. Add this to the frontmatter `style:` block:
-```yaml
-style: |
-  section.center-table table { margin: 0.5em auto; }
-```
+`center-table` ships in the theme:
 Then on the slide:
 ```markdown
 <!-- _class: center-table -->
@@ -444,15 +437,19 @@ Use `left` or `right`; the percentage controls image width. `contain` fits the i
 
 ### Per-slide font size
 
-```yaml
-  section.small-text { font-size: 18px; }
-  section.large-text { font-size: 26px; }
-```
+`small-text` (19px) and `large-text` (26px) ship in the theme:
 
 ```markdown
 <!-- _class: small-text -->
 
-## Dense Slide — everything is 18px on this slide only
+## Dense Slide — everything is 19px on this slide only
+```
+
+To use a different size, override that one rule in the deck's frontmatter:
+
+```yaml
+style: |
+  section.small-text { font-size: 18px; }   /* theme default is 19px */
 ```
 
 ---
@@ -471,12 +468,7 @@ style: |
   ul, ol  { line-height: 1.5; }
 ```
 
-**Per-slide only:**
-```yaml
-style: |
-  section.tight { line-height: 1.3; }
-  section.tight ul, section.tight ol { line-height: 1.5; }
-```
+**Per-slide only** — `tight` ships in the theme (body 1.3, lists 1.5):
 ```markdown
 <!-- _class: tight -->
 
@@ -488,12 +480,9 @@ style: |
 ### Vertical centering on a non-title slide
 
 By default slides are top-aligned (`justify-content: flex-start`). To vertically
-centre content on a specific slide (e.g., a transition/quote slide):
+centre content on a specific slide (e.g., a transition/quote slide), apply
+`vcenter`, which ships in the theme:
 
-```yaml
-style: |
-  section.vcenter { justify-content: center; }
-```
 ```markdown
 <!-- _class: vcenter -->
 
@@ -510,20 +499,18 @@ horizontal centering; vcenter gives vertical).
 ### Blockquote width — per-slide
 
 `--blockquote-width` (default `90%`) sets deck-wide width. For a wider or full-width
-blockquote on one slide only:
+blockquote on one slide only, apply `wide-quote`, which ships in the theme:
 
-```yaml
-style: |
-  section.wide-quote blockquote { max-width: 100%; }
-```
 ```markdown
 <!-- _class: wide-quote -->
 
 > Short pithy quote that benefits from more horizontal space.
 ```
 
-For a narrower, centred pull-quote feel, reduce and pair with `.center`:
+For a narrower, centred pull-quote feel, define your own class in the deck's
+frontmatter — this one is deck-specific, so it does not ship in the theme:
 ```yaml
+style: |
   section.pull-quote blockquote { max-width: 60%; margin: 0 auto; }
 ```
 
