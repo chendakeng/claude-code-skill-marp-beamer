@@ -282,15 +282,37 @@ Other flags worth knowing:
 | Flag | Why |
 |------|-----|
 | `--allow-local-files` | Required whenever the deck references local images. Prints an insecure-access warning; that warning is expected, not an error |
-| `--images png` | Renders each slide to a numbered PNG instead of a PDF. The fast way to check one slide's appearance without opening a 9 MB PDF |
-| `--html` | Self-contained HTML export, needed for presenter mode |
+| `--images png` | Renders every slide to a numbered PNG. **Slow on a long deck** (a 51-slide deck took over 2 minutes, longer than a 120 s tool timeout), so do not use it to check one slide |
+| `--html` | HTML export, under 1 s for 51 slides. Used for the fast preview below and for presenter mode. Images stay linked relative to the HTML, so write it next to the deck |
 
 ### Checking one slide quickly
 
-To iterate on a single slide's styling, extract that slide plus the deck's
-frontmatter into a scratch `.md` and render it with `--images png`. Rendering a
-full deck to PDF takes long enough to discourage the iteration that visual work
-actually needs.
+Measured on a 51-slide deck with about 20 figures:
+
+| Method | Time | Use for |
+|--------|------|---------|
+| `--html` | under 1 s | Opening the whole deck in a browser |
+| `scripts/preview_slide.sh` (HTML + headless Chrome screenshot of one slide) | 15–25 s | **The edit-and-check loop.** Default |
+| `--pdf` | about 50 s | Final check before distribution |
+| `--images png` | over 2 min | Avoid on a full deck |
+
+```bash
+scripts/preview_slide.sh deck.md SLIDE_INDEX /abs/path/to/.vscode/beamer.css /scratch/out.png
+```
+
+- **SLIDE_INDEX counts from the title slide.** If the title slide has `_paginate: skip`, the
+  footer page number N is index N+1.
+- **Run it as a background job or give the call a timeout above 60 s.** A foreground call with
+  the default 120 s limit is where a slow render looks like a failure.
+- **Write scripts to disk with the file-writing tool, not a shell heredoc.** A heredoc containing
+  quotes and `$` was mangled by the harness and the call hung.
+- **The screenshot shows Marp's navigation bar** (a gray pill at the bottom center). It can cover
+  the last line of a slide. Judge overflow by the text above it, or open the HTML in a browser.
+- **No render error was ever the deck's fault in this pipeline.** The cause was the time limit.
+  A non-zero exit from `marp` is the only real failure signal.
+
+For styling work on one slide's CSS, extract that slide plus the frontmatter into a scratch `.md`
+and render that instead.
 
 ### Theme copies in sub-workspace folders
 
