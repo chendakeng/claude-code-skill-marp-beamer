@@ -111,6 +111,18 @@ marp deck.md --allow-local-files \
 VS Code 插件专用配置）。缺少该参数时，CLI 会静默回退到 Marp 默认主题：没有标题栏、
 没有页脚、配色全错，**而退出码仍是 0**。渲染成功不等于渲染正确，务必打开 PDF 查看。
 
+**改完一页后用 `scripts/preview_slide.sh` 检查，不要每次都出整份 PDF。** 51 页的 deck 出 PDF
+约 50 秒，`--images png` 超过 2 分钟（会撞上工具的 120 秒超时，看起来像渲染失败）。预览脚本把
+deck 转成 HTML，再用无头 Chrome 截取指定一页，约 20 秒：
+
+```bash
+~/.claude/skills/claude-code-skill-marp-beamer/scripts/preview_slide.sh \
+  deck.md 页序号 /绝对路径/.vscode/beamer.css /临时目录/out.png
+```
+
+页序号从标题页算起。标题页若设了 `_paginate: skip`，页脚显示的页码 N 对应序号 N+1。
+最终分发前再出一次完整 PDF 检查。
+
 ## 本技能修复的 CSS 问题
 
 ### 问题一：表格阴影列

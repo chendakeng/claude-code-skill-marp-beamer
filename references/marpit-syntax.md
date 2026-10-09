@@ -297,8 +297,11 @@ Measured on a 51-slide deck with about 20 figures:
 | `--images png` | over 2 min | Avoid on a full deck |
 
 ```bash
-scripts/preview_slide.sh deck.md SLIDE_INDEX /abs/path/to/.vscode/beamer.css /scratch/out.png
+~/.claude/skills/claude-code-skill-marp-beamer/scripts/preview_slide.sh \
+  deck.md SLIDE_INDEX /abs/path/to/.vscode/beamer.css /scratch/out.png
 ```
+
+The script needs the `marp` CLI and Google Chrome. Set `CHROME_BIN` for a Chrome installed elsewhere.
 
 - **SLIDE_INDEX counts from the title slide.** If the title slide has `_paginate: skip`, the
   footer page number N is index N+1.
