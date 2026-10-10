@@ -266,10 +266,17 @@ the `@theme` name in the CSS comment header.
 ## Rendering from the CLI
 
 ```bash
-marp deck.md --allow-local-files \
+marp --no-stdin deck.md --allow-local-files \
   --theme-set /abs/path/to/.vscode/beamer.css \
   --pdf -o deck.pdf
 ```
+
+**`--no-stdin` is mandatory outside an interactive terminal.** When stdin is not a
+TTY, which is the case for every agent tool call, `marp` first waits to read Markdown
+from stdin (it logs "Currently waiting data from stdin stream" only at INFO level). If
+nothing closes stdin, the call sits there until the tool times out and looks like a slow
+or failed render. Verified 2026-10-11: one call hung past 120 s; the same deck with
+`--no-stdin` rendered in 3 s.
 
 **`--theme-set` is mandatory.** The Marp CLI does not read
 `.vscode/settings.json` — `markdown.marp.themes` is understood by the VS Code
@@ -282,19 +289,32 @@ Other flags worth knowing:
 | Flag | Why |
 |------|-----|
 | `--allow-local-files` | Required whenever the deck references local images. Prints an insecure-access warning; that warning is expected, not an error |
-| `--images png` | Renders every slide to a numbered PNG. **Slow on a long deck** (a 51-slide deck took over 2 minutes, longer than a 120 s tool timeout), so do not use it to check one slide |
+| `--images png` | Renders every slide to a numbered PNG (`out.001.png`, …). 4 s for a 50-slide deck with 26 figures when run with `--no-stdin`. The earlier measurement of "over 2 minutes" was almost certainly the stdin wait, not rendering |
 | `--html` | HTML export, under 1 s for 51 slides. Used for the fast preview below and for presenter mode. Images stay linked relative to the HTML, so write it next to the deck |
 
-### Checking one slide quickly
+### Checking slides quickly
 
-Measured on a 51-slide deck with about 20 figures:
+Re-measured 2026-10-11 on a 50-slide deck with 26 figures, all with `--no-stdin`:
 
 | Method | Time | Use for |
 |--------|------|---------|
 | `--html` | under 1 s | Opening the whole deck in a browser |
-| `scripts/preview_slide.sh` (HTML + headless Chrome screenshot of one slide) | 15–25 s | **The edit-and-check loop.** Default |
-| `--pdf` | about 50 s | Final check before distribution |
-| `--images png` | over 2 min | Avoid on a full deck |
+| `--images png -o /scratch/p.png` | 4 s | **The edit-and-check loop.** Render everything, view only the changed pages |
+| `--pdf` | 3 s | Final check before distribution |
+| `scripts/preview_slide.sh` | 2 s | One slide as a headless-Chrome screenshot (was 15–25 s before it gained `--no-stdin`). Use when a slide must be checked exactly as Chrome shows it |
+
+The older figures in this section (PDF about 50 s, PNG over 2 minutes) were taken without
+`--no-stdin` and measured the stdin wait, not rendering.
+
+```bash
+# Edit-and-check loop: render every slide, then look only at the pages you changed
+marp --no-stdin deck.md --allow-local-files \
+  --theme-set /abs/path/to/.vscode/beamer.css \
+  --images png -o /scratch/p.png        # writes /scratch/p.001.png, p.002.png, …
+```
+
+File numbers count from the title slide, so with `_paginate: skip` on the title slide the
+footer page number N is file N+1.
 
 ```bash
 ~/.claude/skills/claude-code-skill-marp-beamer/scripts/preview_slide.sh \
@@ -305,14 +325,12 @@ The script needs the `marp` CLI and Google Chrome. Set `CHROME_BIN` for a Chrome
 
 - **SLIDE_INDEX counts from the title slide.** If the title slide has `_paginate: skip`, the
   footer page number N is index N+1.
-- **Run it as a background job or give the call a timeout above 60 s.** A foreground call with
-  the default 120 s limit is where a slow render looks like a failure.
 - **Write scripts to disk with the file-writing tool, not a shell heredoc.** A heredoc containing
   quotes and `$` was mangled by the harness and the call hung.
 - **The screenshot shows Marp's navigation bar** (a gray pill at the bottom center). It can cover
   the last line of a slide. Judge overflow by the text above it, or open the HTML in a browser.
-- **No render error was ever the deck's fault in this pipeline.** The cause was the time limit.
-  A non-zero exit from `marp` is the only real failure signal.
+- **No render error was ever the deck's fault in this pipeline.** The apparent "slow renders"
+  were `marp` waiting on stdin. A non-zero exit from `marp` is the only real failure signal.
 
 For styling work on one slide's CSS, extract that slide plus the frontmatter into a scratch `.md`
 and render that instead.

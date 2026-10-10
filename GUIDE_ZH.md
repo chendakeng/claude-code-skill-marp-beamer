@@ -102,18 +102,22 @@ style: |
 ## 命令行渲染
 
 ```bash
-marp deck.md --allow-local-files \
+marp --no-stdin deck.md --allow-local-files \
   --theme-set /绝对路径/.vscode/beamer.css \
   --pdf -o deck.pdf
 ```
+
+**非交互终端里必须加 `--no-stdin`。** stdin 不是终端时（Agent 的每次工具调用都是这样），`marp`
+会先等待从 stdin 读入 Markdown，只在 INFO 级别打印一行提示。没人关闭 stdin，命令就一直挂着，直到
+工具超时，看起来像渲染很慢或失败。2026-10-11 实测：不加时一次调用挂过 120 秒；加了以后同一份 deck 3 秒出 PDF。
 
 **`--theme-set` 必须显式传入。** Marp CLI 不读取 `.vscode/settings.json`（那是
 VS Code 插件专用配置）。缺少该参数时，CLI 会静默回退到 Marp 默认主题：没有标题栏、
 没有页脚、配色全错，**而退出码仍是 0**。渲染成功不等于渲染正确，务必打开 PDF 查看。
 
-**改完一页后用 `scripts/preview_slide.sh` 检查，不要每次都出整份 PDF。** 51 页的 deck 出 PDF
-约 50 秒，`--images png` 超过 2 分钟（会撞上工具的 120 秒超时，看起来像渲染失败）。预览脚本把
-deck 转成 HTML，再用无头 Chrome 截取指定一页，约 20 秒：
+**改完后用 `--images png` 把整份 deck 渲染到临时目录，只看改动的页。** 加了 `--no-stdin` 后，50 页、
+26 张图的 deck 出 PNG 4 秒、出 PDF 3 秒。以前记录的“PDF 约 50 秒、PNG 超过 2 分钟”测到的是 stdin 等待，
+不是渲染本身。预览脚本（HTML + 无头 Chrome 截取一页）加了 `--no-stdin` 后也只要约 2 秒，需要看浏览器里的实际效果时用：
 
 ```bash
 ~/.claude/skills/claude-code-skill-marp-beamer/scripts/preview_slide.sh \

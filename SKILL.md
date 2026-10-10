@@ -25,7 +25,7 @@ Read only the reference file(s) relevant to the current task. Do not load all fi
 | Copying the ready-to-use CSS file | `assets/beamer.css` |
 | Recolouring a deck for an institution | `references/beamer-css.md` (§ Customising the colour scheme) |
 | Rendering to PDF/PNG from the terminal | `references/marpit-syntax.md` (§ Rendering from the CLI) |
-| Checking one slide quickly after an edit | `scripts/preview_slide.sh` (see § Checking one slide quickly; use it instead of a full PDF or `--images png`) |
+| Checking slides after an edit | `marp --no-stdin … --images png` into a scratch folder, then view the changed pages (see § Rendering from the CLI) |
 | Appendix TOC with clickable links + back buttons | `references/slide-templates.md` (§ Appendix navigation) |
 | Speaker notes + presenter mode | `references/marpit-syntax.md` (§ Speaker notes) |
 
@@ -175,10 +175,12 @@ rediscover.
 6. First slide: `<!-- _class: title -->`
 7. Each section: `<!-- header: 'Section Name' -->` (local — persists forward)
 8. Blank header on one slide: `<!-- _header: '' -->` (spot — this slide only)
-9. Render with `--theme-set` pointing at the CSS — the CLI ignores
-   `settings.json` and falls back to a generic theme with exit code 0
-10. Check a slide after each edit with `scripts/preview_slide.sh` (about 20 s),
-    not a full PDF or `--images png`, which are slow enough to hit a tool timeout
+9. Render with `--no-stdin` and `--theme-set` pointing at the CSS. Without
+   `--no-stdin`, a non-terminal shell (any agent tool call) leaves `marp` waiting
+   on stdin with no error; without `--theme-set` the CLI ignores `settings.json`
+   and falls back to a generic theme with exit code 0
+10. Check slides after each edit by rendering `--images png` into a scratch folder
+    and viewing the changed pages: 4 s for a 50-slide deck
 
 **If the deck lives in a subfolder that may be opened as its own VS Code
 workspace, mirror `.vscode/beamer.css` and `.vscode/settings.json` into it too.**
