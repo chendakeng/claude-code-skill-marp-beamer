@@ -85,6 +85,10 @@ section.my-slide table { font-size: 0.7em; }
 - **Never add a web font or CDN `@import`.** On mainland and campus networks the request hangs rather
   than fails, and an exported HTML deck stays blank until it times out. PDF builds hide this.
   When a project copied an older `beamer.css`, check its first lines for `@import url(` and remove it.
+- **Migrating an older deck:** add `lang:`, change `math: katex` to `mathjax`, and delete the
+  `section { font-family: "Cambria", … }` line the old template put in the frontmatter. It
+  outranks the English stack, and Cambria exists on Windows but not on a Mac without Office, so
+  the deck renders in different fonts on different machines.
 - **Use `math: mathjax`, not `katex`.** KaTeX loads its fonts from `cdn.jsdelivr.net`: with remote
   hosts blocked, a test deck took 24.5 s to load against 0.5 s for MathJax, which inlines SVG.
 - To change a deck's face, override `--font-en` or `--font-zh` in `:root`, not `section { font-family }`
