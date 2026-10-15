@@ -71,12 +71,24 @@ section.my-slide table { font-size: 0.7em; }
 
 ---
 
-## Fonts: local only, never a web-font @import
+## Fonts: local only, chosen by the deck's `lang:`
 
-`assets/beamer.css` uses system fonts (Times New Roman + 宋体: Songti SC on Mac, SimSun on Windows) and
-makes no network request. Never add a Google Fonts or CDN `@import`. On mainland and campus networks the
-request hangs rather than fails, and an exported HTML deck stays blank for about 30 s. PDF builds hide it.
-When a project copied an older `beamer.css`, check its first lines for `@import url(` and remove it.
+| Deck frontmatter | Body font (Mac → Windows → fallback) |
+|------------------|---------------------------------------|
+| `lang: en-US` | Times New Roman (English text and its “quotes”) → Georgia → serif; Chinese characters inside fall to Songti SC / SimSun |
+| `lang: zh-CN` | 宋体 for everything, including “” ‘’ …… : Songti SC → STSong → SimSun → Noto/Source Han Serif → PingFang SC / Microsoft YaHei → serif |
+| `lang: zh-TW` / `zh-HK` | Songti TC → PMingLiU → … → PingFang TC / Microsoft JhengHei |
+| code | Menlo → Consolas → Courier New |
+
+- **Always set `lang:` explicitly.** Without it, Marp uses the build machine's OS locale, so the
+  same deck can come out in Times on one machine and 宋体 on another.
+- **Never add a web font or CDN `@import`.** On mainland and campus networks the request hangs rather
+  than fails, and an exported HTML deck stays blank until it times out. PDF builds hide this.
+  When a project copied an older `beamer.css`, check its first lines for `@import url(` and remove it.
+- **Use `math: mathjax`, not `katex`.** KaTeX loads its fonts from `cdn.jsdelivr.net`: with remote
+  hosts blocked, a test deck took 24.5 s to load against 0.5 s for MathJax, which inlines SVG.
+- To change a deck's face, override `--font-en` or `--font-zh` in `:root`, not `section { font-family }`
+  (the `:lang()` rules outrank a plain `section` rule).
 
 ## Critical CSS design rules
 
@@ -175,7 +187,9 @@ rediscover.
    { "markdown.marp.themes": [".vscode/beamer.css"], "markdown.marp.html": true }
    ```
 3. Reload VS Code window (`Cmd+Shift+P → Reload Window`)
-4. Add frontmatter: `marp: true`, `theme: beamer`, `paginate: true`, `footer: '**Author** **Title** **Venue**'`
+4. Add frontmatter: `marp: true`, `theme: beamer`, `lang: zh-CN` or `en-US`, `math: mathjax`, `paginate: true`, `footer: '**Author** **Title** **Venue**'`.
+   **No `# comments` on directive lines**: Marp keeps them as part of the value, which silently
+   drops `theme:` and corrupts `lang:`
 5. Add a palette to the frontmatter `style:` block — 9 colour tokens, all together
    (`references/beamer-css.md` § Customising the colour scheme). Nothing else
    belongs there: the `section.*` utility classes are already in the theme.
@@ -201,7 +215,7 @@ The recurring judgment call in this skill. Answer it before writing CSS anywhere
 | The change is… | Put it in |
 |----------------|-----------|
 | Structural, or any `section.*` utility class | `assets/beamer.css`, then sync every project copy |
-| This deck's colours, body font, or a token value this deck alone needs | The deck's frontmatter `style:` block |
+| This deck's colours, body font (`--font-en` / `--font-zh`), or a token value this deck alone needs | The deck's frontmatter `style:` block |
 | One word or phrase on one slide | Inline `<span style="…">` |
 
 A `section.*` rule appearing in a deck's frontmatter means the rule belongs in the

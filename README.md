@@ -20,6 +20,9 @@ This skill gives Claude a complete reference for:
 ```
 skill_marp_beamer/
 ├── SKILL.md                      # Entry point: routing table + critical rules
+├── GUIDE_ZH.md                   # Chinese user guide
+├── scripts/
+│   └── preview_slide.sh          # One slide as a headless-Chrome screenshot
 ├── references/
 │   ├── marpit-syntax.md          # Marp markdown syntax, directives, image syntax
 │   ├── beamer-css.md             # CSS architecture, bug fixes, colour customisation
@@ -30,13 +33,6 @@ skill_marp_beamer/
 
 ## Installation
 
-### Claude Code (humans)
-
-```
-/plugin marketplace add chendakeng/claude-code-skill-marp-beamer
-/plugin install marp-beamer@claude-code-skill-marp-beamer
-```
-
 ### Claude Code (AI agents)
 
 Ask your agent:
@@ -46,7 +42,7 @@ Ask your agent:
 ### Manual
 
 ```bash
-git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/skills/marp-beamer
+git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/skills/claude-code-skill-marp-beamer
 ```
 
 ## Quick start
@@ -65,6 +61,8 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    ---
    marp: true
    theme: beamer
+   lang: en-US
+   math: mathjax
    paginate: true
    footer: '**Author** **Title** **Venue · Date**'
    style: |
@@ -82,6 +80,8 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
      }
    ---
    ```
+   Use `lang: zh-CN` for a Chinese deck (the body font becomes 宋体). Keep `math: mathjax`: `katex` loads its fonts from a CDN. Never put a `# comment` on a directive line; Marp reads it as part of the value and, for `theme:`, silently drops the theme.
+
    Set the 9 colour tokens together; partial overrides leave mismatched shades. Layout tokens (`--font-size`, `--pad-x`, `--img-max-width`, …) are overridable the same way when a deck needs them — see the token tables below.
 
    Do **not** put `section.*` utility classes here. They ship in the theme.
@@ -130,7 +130,7 @@ See `references/beamer-css.md` for preset palettes (SCNU blue, CUHK purple & gol
 | `--defblock-width` | `88%` | Definition blocks (`> #### Title` syntax) |
 | `--table-max-width` | `92%` | Tables |
 | `--blockquote-width` | `90%` | Standard blockquotes (left-border style) |
-| `--img-max-width` | `80%` | Inline images |
+| `--img-max-width` | `100%` | Inline images |
 | `--title-h1-width` | `85%` | Title-slide h1 box |
 
 **Deck-wide example — widen all definition blocks:**
@@ -218,21 +218,34 @@ The theme ships two CSS utility classes for centering content. Unlike `![center]
 
 All HTML-based utilities require `"markdown.marp.html": true` in `.vscode/settings.json`. After changing this setting, reload VS Code (`Cmd+Shift+P → Reload Window`).
 
-> **Note on theme CSS vs frontmatter style:** Newly added utility classes in `beamer.css` require a VS Code window reload to take effect in the preview. If a class isn't applying, add it to the frontmatter `style:` block as a reliable fallback — it's always injected fresh.
+> **Note on theme CSS vs frontmatter style:** Newly added utility classes in `beamer.css` require a VS Code window reload to take effect in the preview. Reload before concluding a class does not work; do not copy it into the frontmatter.
 
 ---
 
 ## Fonts
 
-| Font | Purpose | Where it comes from |
-|------|---------|---------|
-| Times New Roman | Latin / English | Built into macOS and Windows |
-| Songti SC / TC | Chinese (宋体) on Mac | Built into macOS |
-| SimSun / PMingLiU | Chinese (宋体 / 細明體) on Windows | Built into Windows |
+All fonts are local system fonts; `beamer.css` makes **no network request**. The deck's `lang:`
+directive picks the stack, so always set it.
 
-All fonts are local system fonts; `beamer.css` makes **no network request**. Do not add a Google Fonts (or any CDN) `@import` back. On a network where `fonts.googleapis.com` is blocked (mainland China, many campus networks), the request is not refused but hangs, and an exported HTML deck stays blank until it times out, about 30 s. PDF builds hide the problem because they fall back silently. A deck that wants another face sets it in its own `style:` block, using a font installed on the presenting machine.
+| `lang:` | Body font | Fallback chain |
+|---------|-----------|----------------|
+| `en-US` (or unset) | Times New Roman, for English text and its quotes | Times → Georgia → Liberation Serif → (Chinese characters: Songti SC → SimSun → PingFang SC → Microsoft YaHei) → serif |
+| `zh-CN` | 宋体 for everything, including “” ‘’ …… | Songti SC (Mac) → STSong → SimSun / NSimSun (Windows) → Noto / Source Han Serif → PingFang SC → Microsoft YaHei → Times New Roman → serif |
+| `zh-TW`, `zh-HK` | 宋體 / 明體 | Songti TC → PMingLiU / MingLiU → Noto / Source Han Serif TC → PingFang TC → Microsoft JhengHei → serif |
+| code | monospace | Menlo → Consolas → Courier New → monospace |
 
-## The two CSS bugs this skill fixes
+To use another face in one deck, override `--font-en` or `--font-zh` in its `:root` style block,
+with a font installed on the presenting machine.
+
+**Do not add a Google Fonts (or any CDN) `@import`.** Where `fonts.googleapis.com` is blocked
+(mainland China, many campus networks) the request hangs rather than fails, and an exported HTML
+deck stays blank until it times out. PDF builds hide the problem. The same applies to math:
+use `math: mathjax`; `math: katex` fetches its fonts from `cdn.jsdelivr.net` (24.5 s to load with
+remote hosts blocked, against 0.5 s for MathJax).
+
+## CSS bugs this skill fixes
+
+Four in total; the other two (inline code chips vanishing on striped rows, and Marp's paragraph margin winning over the reset) are in `SKILL.md` § Critical CSS design rules.
 
 ### Shadow column on tables
 
@@ -293,13 +306,13 @@ The skill's main contribution is the precise three-part table fix — without it
 |---|---|---|
 | **Table corner notch** | Uses `border-spacing: 0`; cell-level `border-radius` works correctly | Fixed via `border-radius` + `overflow: hidden` on the `table` element |
 | **Definition block gap line** | `border-radius` on all child corners + flex sizing; can leak a seam if padding misaligns | `overflow: hidden` on parent + `border-radius: 0` on children — no seam possible |
-| **Inline code font** | `font-family: monospace` set explicitly | Same fix applied |
+| **Inline code font** | `font-family: monospace` set explicitly | Explicit stack: Menlo, Consolas, Courier New, monospace |
 
 ### Enhancements over neobeam
 
 - `h2` underline border for visual section separation
 - Explicit column text-align and `vertical-align: middle` on table cells
-- Image max-width 80% (vs neobeam's 50%) — more practical for slide content
+- Image max-width 100% (vs neobeam's 50%), more practical for slide content
 
 ## Reference
 

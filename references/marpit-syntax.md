@@ -24,12 +24,20 @@ Must be the very first block in the file.
 ```yaml
 ---
 marp: true
-theme: beamer          # must match @theme name in the CSS file
+theme: beamer
 paginate: true
-math: katex            # or mathjax
+lang: en-US
+math: mathjax
 footer: '**Author** **Title** **Venue · Date**'
 ---
 ```
+
+**No `#` comments on directive lines.** Marp keeps the rest of the line as the value, so
+`theme: beamer  # note` silently drops the theme and `lang: zh-CN  # note` writes the comment into
+the language tag (verified 2026-10-15). Put notes on their own line or outside the frontmatter.
+
+`lang:` picks the theme's font stack (`en-US` → Times New Roman, `zh-CN` → 宋体), so always set
+it. `math: mathjax` keeps HTML exports offline; `katex` fetches fonts from `cdn.jsdelivr.net`.
 
 The footer value uses Markdown bold segments (`**…**`) — Marp renders each as a
 `<strong>` child inside `<footer>`, which the CSS styles as three sections.
@@ -108,7 +116,7 @@ that class and prevents it from affecting other slides.
 
 ```yaml
 ---
-headingDivider: 2   # split at every ## heading
+headingDivider: 2
 ---
 ```
 
@@ -215,9 +223,13 @@ Key points:
 
 ```yaml
 ---
-math: katex   # or mathjax
+math: mathjax
 ---
 ```
+
+Use `mathjax`, Marp's default. It renders formulas as inline SVG, so HTML exports need no
+network. `katex` makes the HTML fetch about 60 font files from `cdn.jsdelivr.net`; with remote
+hosts blocked, a test deck took 24.5 s to load against 0.5 s for MathJax.
 
 ```markdown
 Inline: $E = mc^2$
@@ -374,7 +386,7 @@ press **`P`**. You will see:
 - Speaker notes panel (below)
 - Elapsed timer
 
-The HTML file is self-contained — no server needed.
+No server is needed, but images are linked by relative path: keep the HTML next to its `assets/` folder when copying it.
 
 ### Practical pattern for talk scripts
 
@@ -397,4 +409,4 @@ Today I want to show you how my research and teaching come together.
 | Attempt | Result |
 |:--------|:-------|
 | `<!-- note: text -->` | Not a Marp directive — ignored |
-| Notes in PDF export | PDF has no presenter mode — notes are lost; use HTML |
+| Notes in PDF export | Dropped by default. `--pdf-notes` adds them as PDF annotations; for presenter view use HTML |

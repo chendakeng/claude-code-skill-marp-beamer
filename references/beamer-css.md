@@ -1,8 +1,8 @@
 # Beamer CSS Reference
 
 Written from scratch to avoid the bugs present in the neobeam theme. The ready-to-copy
-full CSS is in `assets/beamer.css`. This file explains the architecture and the two
-critical bug fixes.
+full CSS is in `assets/beamer.css`. This file explains the architecture and the four
+non-obvious CSS fixes.
 
 ---
 
@@ -56,12 +56,16 @@ per-deck in the frontmatter `style:` block — no CSS file editing needed.
   --pad-x:     2.5rem;
   --radius:    0.45rem;
   --font-size: 22px;
+  --font-en:   'Times New Roman', Times, Georgia, … serif;   /* default and lang: en-* */
+  --font-zh:   'Songti SC', STSong, SimSun, … serif;         /* lang: zh-CN */
+  --font-zh-hant: 'Songti TC', PMingLiU, … serif;          /* lang: zh-TW / zh-HK */
+  --font-mono: Menlo, Consolas, 'Courier New', monospace;
 
   /* ── Element widths ── */
   --defblock-width:   88%;  /* definition block  > #### Title  (was hardcoded 62%) */
   --table-max-width:  92%;  /* tables */
   --blockquote-width: 90%;  /* standard blockquotes */
-  --img-max-width:    80%;  /* inline images */
+  --img-max-width:    100%; /* inline images */
   --title-h1-width:   85%;  /* title-slide h1 box */
 }
 ```
@@ -91,6 +95,27 @@ section {
            calc(var(--footer-h) + 0.6rem);
 }
 ```
+
+---
+
+## Fonts: chosen by `lang:`, local only
+
+```css
+section               { font-family: var(--font); }          /* = --font-en */
+section:lang(zh)      { font-family: var(--font-zh); }
+section:lang(zh-TW), section:lang(zh-HK), section:lang(zh-Hant) { font-family: var(--font-zh-hant); }
+```
+
+Marp copies the `lang:` directive onto every `<section>` as a `lang` attribute, so `:lang()`
+works in the VS Code preview, HTML, PDF and PNG. Without the directive the `<html>` lang is the
+build machine's locale, which is why every deck should set it. Each stack lists the Mac font,
+then the Windows font, then open-source equivalents, then a CJK sans every Mac and PC has
+(PingFang / Microsoft YaHei), then the generic family, so a missing font degrades instead of
+falling to tofu. Verified 2026-10-15 with Chrome's own font report: `zh-CN` draws every glyph,
+quotes included, in Songti SC; `en-US` draws Latin in Times New Roman and Chinese names in
+Songti SC; a stack with no 宋体 installed falls to PingFang SC.
+
+No `@import url(...)` of any web font. It hangs on mainland networks and blanks an HTML export.
 
 ---
 
@@ -190,7 +215,7 @@ table th {
 }
 table th:first-child { text-align: left; }
 
-table td { padding: 0.35em 0.9em; border: 1px solid #d0d0e8; vertical-align: middle; }
+table td { padding: 0.35em 0.9em; border: 1px solid var(--table-border); vertical-align: middle; }
 table td:not(:first-child) { text-align: center; }
 table tbody tr:nth-child(odd)  td { background: var(--white); }
 table tbody tr:nth-child(even) td { background: var(--bg-stripe2); }
@@ -303,15 +328,15 @@ section.title {
 section.title h1 {
   background: var(--primary); color: var(--white);
   padding: 0.5em 1.5em; border-radius: var(--radius);
-  font-size: 1.6em; border-bottom: none; max-width: 85%;
+  font-size: 1.6em; border-bottom: none; max-width: var(--title-h1-width);
 }
 
 section.title h2 { border-bottom: none; font-weight: 400; font-size: 1em; }
-section.title h3 { font-weight: 300; font-size: 0.85em; color: #555; }
+section.title h3 { font-weight: 300; font-size: 0.85em; color: var(--muted); }
 
 /* Reset blockquote to plain italic text on title slide */
 section.title blockquote {
-  all: unset; color: #555; font-style: italic; font-size: 0.9em;
+  all: unset; color: var(--muted); font-style: italic; font-size: 0.9em;
 }
 ```
 
@@ -333,7 +358,7 @@ The theme provides two utility classes:
 .center { text-align: center; }
 .center table { margin-left: auto; margin-right: auto; }
 
-.caption { text-align: center; font-size: 0.78em; color: #666; margin: 0.2em 0 0.5em; }
+.caption { text-align: center; font-size: 0.78em; color: var(--caption-fg); margin: 0.2em 0 0.5em; }
 ```
 
 **Why `.center table` is needed:** `text-align: center` on a wrapper div centers inline

@@ -1,5 +1,5 @@
 /*!
- * beamer.css — Custom Marp theme for HKMU 2026 presentation
+ * beamer.css: beamer-style Marp theme (claude-code-skill-marp-beamer).
  * Written from scratch. Primary colour: #3333b2 (classic LaTeX beamer blue).
  *
  * @theme beamer
@@ -7,8 +7,12 @@
  * @size 16:9 1280px 720px
  */
 
-/* Local fonts only, no remote @import: fonts.googleapis.com is blocked or slow on mainland networks,
-   and an exported HTML deck shows a blank page until that request times out (~30 s). */
+/* Fonts: local system fonts only, never a remote @import. fonts.googleapis.com (and any CDN) hangs
+   on mainland and campus networks, and an exported HTML deck stays blank until it times out.
+   English decks (no lang, or lang: en-*) → Times New Roman, so English text and its quotes use it.
+   Chinese decks (lang: zh-CN) → 宋体 for everything, including “” ‘’ …… (Songti SC on Mac, SimSun
+   on Windows). lang: zh-TW / zh-HK → Songti TC / PMingLiU. Each stack falls back to the other
+   platform's font, then to a sans CJK font every Mac/PC has (PingFang / Microsoft YaHei), then serif. */
 @import "default";
 
 /* ────────────────────────────────────────────────────────
@@ -46,7 +50,15 @@
   --footer-h:  1.4rem;
   --pad-x:     2.5rem;
   --radius:    0.45rem;
-  --font:      'Times New Roman', Times, 'Songti SC', 'Songti TC', STSong, SimSun, PMingLiU, serif;
+  /* Fonts: local system fonts only (see "Fonts" below). The deck's `lang:` picks the stack. */
+  --font-en:   'Times New Roman', Times, Georgia, 'Liberation Serif',
+               'Songti SC', STSong, SimSun, 'PingFang SC', 'Microsoft YaHei', serif;
+  --font-zh:   'Songti SC', STSong, SimSun, NSimSun, 'Noto Serif CJK SC', 'Source Han Serif SC',
+               'PingFang SC', 'Microsoft YaHei', 'Times New Roman', serif;
+  --font-zh-hant: 'Songti TC', PMingLiU, MingLiU, 'Noto Serif CJK TC', 'Source Han Serif TC',
+               'PingFang TC', 'Microsoft JhengHei', 'Times New Roman', serif;
+  --font-mono: Menlo, Consolas, 'Courier New', monospace;
+  --font:      var(--font-en);   /* legacy name; decks should set --font-en / --font-zh instead */
   --font-size: 22px;
 
   /* ── Element widths (adjustable per-deck in frontmatter style:) ── */
@@ -77,6 +89,13 @@ section {
   /* push content below header and above footer */
   padding: calc(var(--header-h) + 1rem) var(--pad-x) calc(var(--footer-h) + 0.6rem);
 }
+
+/* Chinese decks: set `lang: zh-CN` (or zh-TW / zh-HK) in the frontmatter. Marp copies it onto
+   every <section>, so :lang() works in the VS Code preview, HTML, PDF and PNG alike. */
+section:lang(zh)      { font-family: var(--font-zh); }
+section:lang(zh-TW),
+section:lang(zh-HK),
+section:lang(zh-Hant) { font-family: var(--font-zh-hant); }
 
 /* ────────────────────────────────────────────────────────
    Header bar  (shown when slide has <!-- header: '…' -->)
@@ -344,7 +363,7 @@ img[alt*="left"]   { float: left;  margin: 0.5em 1em 0.5em 0; }
 
    For centering a table on one slide:
      <!-- _class: center-table -->
-   Add to frontmatter style: section.center-table table { margin: 0.5em auto; }
+   (center-table ships in this theme; see the per-slide utility classes at the end)
    ──────────────────────────────────────────────────────── */
 .center {
   text-align: center;
@@ -372,7 +391,7 @@ code {
   padding: 0.1em 0.35em;
   border-radius: 0.3em;
   font-size: 0.85em;
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 /* Fenced code blocks reuse the chip fill but drop the chip framing */

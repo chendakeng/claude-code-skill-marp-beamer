@@ -20,6 +20,9 @@
 ```
 skill_marp_beamer/
 ├── SKILL.md                      # 入口：路由表 + 关键规则
+├── GUIDE_ZH.md                   # 中文使用指南（本文件）
+├── scripts/
+│   └── preview_slide.sh          # 用无头 Chrome 截取单页
 ├── references/
 │   ├── marpit-syntax.md          # Marp 语法、指令、图片语法
 │   ├── beamer-css.md             # CSS 架构、问题修复、颜色自定义
@@ -30,13 +33,6 @@ skill_marp_beamer/
 
 ## 安装方法
 
-### Claude Code（人工操作）
-
-```
-/plugin marketplace add chendakeng/claude-code-skill-marp-beamer
-/plugin install marp-beamer@claude-code-skill-marp-beamer
-```
-
 ### Claude Code（AI Agent 操作）
 
 告诉你的 Agent：
@@ -46,7 +42,7 @@ skill_marp_beamer/
 ### 手动安装
 
 ```bash
-git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/skills/marp-beamer
+git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/skills/claude-code-skill-marp-beamer
 ```
 
 ## 快速开始
@@ -62,14 +58,33 @@ git clone https://github.com/chendakeng/claude-code-skill-marp-beamer ~/.claude/
    ---
    marp: true
    theme: beamer
+   lang: zh-CN
+   math: mathjax
    paginate: true
    footer: '**作者姓名** **演讲标题** **会议 · 日期**'
    ---
    ```
+   中文 deck 写 `lang: zh-CN`（全部宋体），英文 deck 写 `lang: en-US`（Times New Roman）。公式用 `math: mathjax`。
+   **指令行后面不要加 `# 注释`**：Marp 会把注释当成值的一部分，`theme:` 后面加注释会让主题直接失效。
 5. 使用 Claude Code 时，直接描述需求即可触发本技能，例如：
    - "帮我做一个学术报告的幻灯片"
    - "我的 Marp 表格右边有奇怪的阴影列，怎么修复？"
    - "定义块的标题栏和正文之间有一条细线"
+
+## 字体：只用本机字体，由 `lang:` 决定
+
+| frontmatter | 正文字体（Mac → Windows → 兜底） |
+|-------------|-----------------------------------|
+| `lang: zh-CN` | 全部用宋体，包括“”‘’……：Songti SC → STSong → SimSun / NSimSun → 思源宋体 → 苹方 / 微软雅黑 → serif |
+| `lang: en-US` | Times New Roman（英文和英文引号）→ Georgia → serif；夹在其中的中文用 Songti SC / SimSun |
+| `lang: zh-TW` / `zh-HK` | Songti TC → PMingLiU → 思源宋体 TC → 苹方 TC / 微软正黑 → serif |
+
+- **每个 deck 都要写 `lang:`。** 不写时 Marp 取电脑的系统语言，同一份 deck 换台电脑可能换了字体。
+- **不要加任何网络字体的 `@import`。** 在内地和校园网，`fonts.googleapis.com` 的请求不会报错，而是一直挂着，
+  导出的 HTML 会空白到超时为止（约 30 秒）。PDF 不受影响，所以平时看不出来。
+- **公式用 `math: mathjax`。** `katex` 要从 `cdn.jsdelivr.net` 下载字体：屏蔽外网时测试 deck 要 24.5 秒才显示，
+  MathJax 只要 0.5 秒。
+- 想换字体，在 `:root` 里改 `--font-en` 或 `--font-zh`，不要写 `section { font-family: … }`。
 
 ## 配色：九个颜色变量，一次全改
 

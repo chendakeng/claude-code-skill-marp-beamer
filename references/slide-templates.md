@@ -8,8 +8,9 @@ Copy this as your starting `.md` file. Replace placeholders in `[]`.
 ---
 marp: true
 theme: beamer
+lang: en-US
 paginate: true
-math: katex
+math: mathjax
 footer: '**[Author Name]** **[Presentation Title]** **[Venue · Date]**'
 style: |
   :root {
@@ -24,9 +25,6 @@ style: |
     --code-border:    #c2c2e6;   /* inline code chip border */
     --table-border:   #d0d0e8;   /* table cell borders — recolour with the palette */
   }
-
-  /* Serif body text for an academic deck (optional; theme default is Times New Roman + 宋体). Use installed fonts only, never a web-font @import */
-  section { font-family: "Cambria", "Georgia", "Palatino", serif; }
 ---
 
 <!-- _class: title -->
@@ -94,6 +92,9 @@ Content continues here.
 
 ---
 
+For a Chinese deck, change `lang: en-US` to `lang: zh-CN`: the body font switches to 宋体.
+Do not add `# comments` to directive lines; Marp reads them as part of the value.
+
 ### What the frontmatter should and should not carry
 
 The `style:` block above is deliberately short. Everything structural, including
@@ -103,7 +104,7 @@ is genuinely deck-specific:
 | Belongs in the deck frontmatter | Belongs in `beamer.css` |
 |---------------------------------|-------------------------|
 | The colour palette | Layout, spacing, element widths |
-| A body font override | All `section.*` utility classes |
+| A body font override, via `--font-en` / `--font-zh` in `:root` | All `section.*` utility classes |
 | One-off fixes for this deck's content (e.g. `table td { border-color: … }` to match a new palette) | `.center`, `.caption`, `.fig-title` |
 | Layout tokens this deck alone needs different (`--font-size`, `--img-max-width`) | Everything else |
 
@@ -238,7 +239,7 @@ $$C(t) = C_0 \cdot e^{-\lambda t} + \epsilon$$
 Where $\lambda$ is the habituation rate and $\epsilon$ is residual compliance.
 ```
 
-Requires `math: katex` in frontmatter.
+Requires `math: mathjax` in frontmatter (self-contained SVG; `katex` pulls fonts from a CDN).
 
 ---
 
@@ -397,10 +398,8 @@ The theme provides `.center` (general) and `.caption` (figure label) utilities.
 <div class="caption">Figure 1. Predicted margins by year under surveillance</div>
 ```
 
-**Center a table** — markdown tables cannot be wrapped in a `<div>`. Use a slide-level
-class. Add this to the frontmatter `style:` block:
-`center-table` ships in the theme:
-Then on the slide:
+**Center a table.** Markdown tables cannot be wrapped in a `<div>`. Use the slide-level
+class `center-table`, which ships in the theme:
 ```markdown
 <!-- _class: center-table -->
 
@@ -541,11 +540,7 @@ style: |
 ```yaml
 # Three-section academic footer
 footer: '**Dr. Jane Smith** **Surveillance & Compliance** **APSA · Sept 2025**'
-
-# Two meaningful sections + blank third
 footer: '**Jane Smith** **University of X** **  **'
-
-# Minimal: just name and date
 footer: '**Jane Smith** **  ** **2025**'
 ```
 
