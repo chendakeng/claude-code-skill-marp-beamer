@@ -224,16 +224,13 @@ All HTML-based utilities require `"markdown.marp.html": true` in `.vscode/settin
 
 ## Fonts
 
-| Font | Purpose | Loading |
+| Font | Purpose | Where it comes from |
 |------|---------|---------|
-| Roboto | Latin / English | Google Fonts CDN |
-| Noto Sans TC | Traditional Chinese | Google Fonts CDN |
-| Noto Sans SC | Simplified Chinese | Google Fonts CDN |
-| PingFang TC / SC | CJK fallback | macOS system font |
+| Times New Roman | Latin / English | Built into macOS and Windows |
+| Songti SC / TC | Chinese (宋体) on Mac | Built into macOS |
+| SimSun / PMingLiU | Chinese (宋体 / 細明體) on Windows | Built into Windows |
 
-All three Google fonts are loaded via `@import` in `beamer.css` — nothing to configure per-deck. Noto CJK fonts are served as smart unicode-range subsets by Google's CDN (only the glyphs actually used are downloaded), so bundling them locally is not practical.
-
-**Offline behaviour:** Roboto and Noto Sans require internet. If unavailable, Latin falls back to system sans-serif and Chinese falls back to PingFang TC/SC (built into macOS — high quality and always available).
+All fonts are local system fonts; `beamer.css` makes **no network request**. Do not add a Google Fonts (or any CDN) `@import` back. On a network where `fonts.googleapis.com` is blocked (mainland China, many campus networks), the request is not refused but hangs, and an exported HTML deck stays blank until it times out, about 30 s. PDF builds hide the problem because they fall back silently. A deck that wants another face sets it in its own `style:` block, using a font installed on the presenting machine.
 
 ## The two CSS bugs this skill fixes
 

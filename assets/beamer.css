@@ -7,7 +7,8 @@
  * @size 16:9 1280px 720px
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+/* Local fonts only, no remote @import: fonts.googleapis.com is blocked or slow on mainland networks,
+   and an exported HTML deck shows a blank page until that request times out (~30 s). */
 @import "default";
 
 /* ────────────────────────────────────────────────────────
@@ -45,7 +46,7 @@
   --footer-h:  1.4rem;
   --pad-x:     2.5rem;
   --radius:    0.45rem;
-  --font:      'Roboto', 'Noto Sans TC', 'Noto Sans SC', sans-serif;
+  --font:      'Times New Roman', Times, 'Songti SC', 'Songti TC', STSong, SimSun, PMingLiU, serif;
   --font-size: 22px;
 
   /* ── Element widths (adjustable per-deck in frontmatter style:) ── */

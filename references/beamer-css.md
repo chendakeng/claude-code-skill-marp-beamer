@@ -18,7 +18,7 @@ name here must match what you write in the slide frontmatter (`theme: beamer`).
  * @size 16:9 1280px 720px
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+/* No remote font @import: it blocks HTML rendering on mainland networks (see README § Fonts) */
 @import "default";   /* Marp's base reset — always import this */
 ```
 
@@ -83,7 +83,7 @@ section {
   flex-direction: column;
   justify-content: flex-start;
   background: var(--white);
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font);   /* local fonts: Times New Roman + 宋体 */
   font-size: var(--font-size);
   color: var(--text);
   line-height: 1.5;

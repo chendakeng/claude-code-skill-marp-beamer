@@ -25,7 +25,7 @@ style: |
     --table-border:   #d0d0e8;   /* table cell borders — recolour with the palette */
   }
 
-  /* Serif body text for an academic deck (optional — theme default is Roboto) */
+  /* Serif body text for an academic deck (optional; theme default is Times New Roman + 宋体). Use installed fonts only, never a web-font @import */
   section { font-family: "Cambria", "Georgia", "Palatino", serif; }
 ---
 

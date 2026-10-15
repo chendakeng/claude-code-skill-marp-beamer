@@ -71,6 +71,13 @@ section.my-slide table { font-size: 0.7em; }
 
 ---
 
+## Fonts: local only, never a web-font @import
+
+`assets/beamer.css` uses system fonts (Times New Roman + 宋体: Songti SC on Mac, SimSun on Windows) and
+makes no network request. Never add a Google Fonts or CDN `@import`. On mainland and campus networks the
+request hangs rather than fails, and an exported HTML deck stays blank for about 30 s. PDF builds hide it.
+When a project copied an older `beamer.css`, check its first lines for `@import url(` and remove it.
+
 ## Critical CSS design rules
 
 Four areas of the beamer CSS require non-obvious rules. Each rule is intentional:
